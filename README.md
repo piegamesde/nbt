@@ -1,4 +1,4 @@
-# Flow NBT [![License](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)][License] [![Flattr this](http://img.shields.io/badge/flattr-donate-lightgrey.svg?style=flat)][Donate] [![Build Status](http://img.shields.io/travis/flow/nbt/master.svg?style=flat)](https://travis-ci.org/flow/nbt) [![Coverage Status](http://img.shields.io/coveralls/flow/nbt/master.svg?style=flat)](https://coveralls.io/r/flow/nbt)
+# Flow NBT [![License](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)][License] [![Flattr this](http://img.shields.io/badge/flattr-donate-lightgrey.svg?style=flat)][Donate] [![Build Status](http://img.shields.io/travis/flow/nbt/develop.svg?style=flat)](https://travis-ci.org/flow/nbt) [![Coverage Status](http://img.shields.io/coveralls/flow/nbt/develop.svg?style=flat)](https://coveralls.io/r/flow/nbt)
 
 Named Binary Tag (NBT) library for Java based on Graham Edgecombe's JNBT library. NBT is a tag based binary format designed to carry large amounts of binary data with smaller amounts of additional data.
 
@@ -13,7 +13,7 @@ The latest and greatest source can be found here on [GitHub](https://github.com/
 
     git clone git://github.com/flow/nbt.git
 
-Or download the [latest zip archive](https://github.com/flow/nbt/archive/master.zip).
+Or download the latest [development archive](https://github.com/flow/nbt/archive/develop.zip) or the latest [stable archive](https://github.com/flow/nbt/archive/master.zip).
 
 ## Test Dependencies
 The following dependencies are only needed if you compiling the tests included with this project. Gotta test 'em all!
@@ -43,7 +43,7 @@ If you're using [Maven](https://maven.apache.org/download.html) to manage projec
     <dependency>
         <groupId>com.flowpowered</groupId>
         <artifactId>flow-nbt</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
     </dependency>
 
 If you're using [Gradle](https://www.gradle.org/) to manage project dependencies, simply include the following in your `build.gradle` file:
@@ -52,7 +52,7 @@ If you're using [Gradle](https://www.gradle.org/) to manage project dependencies
         mavenCentral()
     }
     dependencies {
-        compile 'com.flowpowered:flow-nbt:1.0.0'
+        compile 'com.flowpowered:flow-nbt:1.1.0'
     }
 
 If you plan on using snapshots and do not already have the snapshot repo in your repository list, you will need to add this as well:
@@ -64,9 +64,9 @@ If you'd prefer to manually import the latest .jar file, you can get it [here](h
 ## Documentation
 Want to get friendly with the project and put it to good use? Check out the latest [Javadocs](https://flowpowered.com/nbt).
 
-To generate Javadocs with Maven, use the `mvn javadoc:javadoc` command. To view the javadocs simply go to `target/site/apidocs/` and open `index.html` in a web browser.
+To generate Javadocs with Maven, use the `mvn javadoc:javadoc` command. To view the Javadocs simply go to `target/site/apidocs/` and open `index.html` in a web browser.
 
-To generate Javadocs with Gradle, use the `gradlew javadoc` command. To view the javadocs simply go to `build/docs/javadoc/` and open `index.html` in a web browser.
+To generate Javadocs with Gradle, use the `gradlew javadoc` command. To view the Javadocs simply go to `build/docs/javadoc/` and open `index.html` in a web browser.
 
 ## Version Control
 We've adopted the [git flow branching model](http://nvie.com/posts/a-successful-git-branching-model/) in our projects. The creators of git flow released a [short intro video](http://vimeo.com/16018419) to explain the model.
