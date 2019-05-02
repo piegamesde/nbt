@@ -187,10 +187,7 @@ public final class NBTInputStream implements Closeable {
 
 		String name;
 		if (type != TagType.TAG_END) {
-			int nameLength = dataIn.readShort() & 0xFFFF;
-			byte[] nameBytes = new byte[nameLength];
-			dataIn.readFully(nameBytes);
-			name = new String(nameBytes, NBTConstants.CHARSET.name());
+			name = dataIn.readUTF();
 		} else {
 			name = "";
 		}
@@ -246,10 +243,7 @@ public final class NBTInputStream implements Closeable {
 			return new ByteArrayTag(name, bytes);
 
 		case TAG_STRING:
-			length = dataIn.readShort();
-			bytes = new byte[length];
-			dataIn.readFully(bytes);
-			return new StringTag(name, new String(bytes, NBTConstants.CHARSET.name()));
+			return new StringTag(name, dataIn.readUTF());
 
 		case TAG_LIST:
 			TagType childType = TagType.getById(dataIn.readByte());

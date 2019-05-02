@@ -155,11 +155,9 @@ public final class NBTOutputStream implements Closeable {
 	 */
 	public void writeTag(Tag<?> tag) throws IOException {
 		String name = tag.getName();
-		byte[] nameBytes = name.getBytes(NBTConstants.CHARSET.name());
-
+		
 		dataOut.writeByte(tag.getType().getId());
-		dataOut.writeShort(nameBytes.length);
-		dataOut.write(nameBytes);
+		dataOut.writeUTF(name);
 
 		if (tag.getType() == TagType.TAG_END) {
 			throw new IOException("Named TAG_End not permitted.");
@@ -310,9 +308,7 @@ public final class NBTOutputStream implements Closeable {
 	 *             if an I/O error occurs.
 	 */
 	private void writeStringTagPayload(StringTag tag) throws IOException {
-		byte[] bytes = tag.getValue().getBytes(NBTConstants.CHARSET.name());
-		dataOut.writeShort(bytes.length);
-		dataOut.write(bytes);
+		dataOut.writeUTF(tag.getValue());
 	}
 
 	/**
