@@ -34,7 +34,7 @@ public class ListTag<T extends Tag<?>> extends Tag<List<T>> {
     /**
      * The type of entries within this list.
      */
-    private final Class<T> type;
+    private final TagType type;
     /**
      * The value.
      */
@@ -47,7 +47,7 @@ public class ListTag<T extends Tag<?>> extends Tag<List<T>> {
      * @param type The type of item in the list.
      * @param value The value.
      */
-    public ListTag(String name, Class<T> type, List<T> value) {
+    public ListTag(String name, TagType type, List<T> value) {
         super(TagType.TAG_LIST, name);
         this.type = type;
         this.value = value;
@@ -58,7 +58,7 @@ public class ListTag<T extends Tag<?>> extends Tag<List<T>> {
      *
      * @return The type of item in this list.
      */
-    public Class<T> getElementType() {
+    public TagType getElementType() {
         return type;
     }
 
@@ -81,7 +81,7 @@ public class ListTag<T extends Tag<?>> extends Tag<List<T>> {
         }
 
         StringBuilder bldr = new StringBuilder();
-        bldr.append("TAG_List").append(append).append(": ").append(value.size()).append(" entries of type ").append(TagType.getByTagClass(type).getTypeName()).append("\r\n{\r\n");
+        bldr.append("TAG_List").append(append).append(": ").append(value.size()).append(" entries of type ").append(type.getTypeName()).append("\r\n{\r\n");
         for (Tag<?> t : value) {
             bldr.append("   ").append(t.toString().replaceAll("\r\n", "\r\n   ")).append("\r\n");
         }

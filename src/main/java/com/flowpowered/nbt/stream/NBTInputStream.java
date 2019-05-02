@@ -225,7 +225,7 @@ public final class NBTInputStream implements Closeable {
 				tagList.add(tag);
 			}
 
-			return new ListTag(name, clazz, tagList);
+			return new ListTag(name, childType, tagList);
 
 		case TAG_COMPOUND:
 			CompoundMap compoundTagList = new CompoundMap();

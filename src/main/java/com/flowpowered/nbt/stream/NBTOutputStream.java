@@ -252,11 +252,10 @@ public final class NBTOutputStream implements Closeable {
 	 */
 	@SuppressWarnings("unchecked")
 	private void writeListTagPayload(ListTag<?> tag) throws IOException {
-		Class<? extends Tag<?>> clazz = tag.getElementType();
 		List<Tag<?>> tags = (List<Tag<?>>) tag.getValue();
 		int size = tags.size();
 
-		dataOut.writeByte(TagType.getByTagClass(clazz).getId());
+		dataOut.writeByte(tag.getElementType().getId());
 		dataOut.writeInt(size);
 		for (Tag<?> tag1 : tags) {
 			writeTagPayload(tag1);

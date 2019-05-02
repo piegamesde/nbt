@@ -15,6 +15,7 @@ import com.flowpowered.nbt.DoubleTag;
 import com.flowpowered.nbt.IntTag;
 import com.flowpowered.nbt.ListTag;
 import com.flowpowered.nbt.Tag;
+import com.flowpowered.nbt.TagType;
 import com.flowpowered.nbt.stream.NBTInputStream;
 import com.flowpowered.nbt.stream.NBTOutputStream;
 
@@ -267,7 +268,7 @@ public class Chunk {
 		/* Update entities */
 		for (CompoundTag entity : ((ListTag<CompoundTag>) value.get("Entities")).getValue()) {
 			List<DoubleTag> pos = ((ListTag<DoubleTag>) entity.getValue().get("Pos")).getValue();
-			entity.getValue().put(new ListTag<>("Pos", DoubleTag.class,
+			entity.getValue().put(new ListTag<>("Pos", TagType.TAG_DOUBLE,
 					Arrays.asList(
 							new DoubleTag(null, pos.get(0).getValue() + diffX),
 							new DoubleTag(null, pos.get(1).getValue() + diffY),
