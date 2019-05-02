@@ -23,6 +23,9 @@
  */
 package com.flowpowered.nbt;
 
+import java.util.Optional;
+import java.util.OptionalDouble;
+
 /**
  * The {@code TAG_Double} tag.
  */
@@ -52,6 +55,16 @@ public final class DoubleTag extends Tag<Double> {
     public void setValue(Double value) {
         this.value = value;
     }
+    
+	@Override
+	public Optional<DoubleTag> getAsDoubleTag() {
+		return Optional.of(this);
+	}
+	
+	@Override
+	public OptionalDouble getDoubleValue() {
+		return OptionalDouble.of(value);
+	}
 
     @Override
     public String toString() {
@@ -63,7 +76,8 @@ public final class DoubleTag extends Tag<Double> {
         return "TAG_Double" + append + ": " + value;
     }
 
-    public DoubleTag clone() {
+    @Override
+	public DoubleTag clone() {
         return new DoubleTag(getName(), value);
     }
 }

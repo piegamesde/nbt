@@ -23,6 +23,8 @@
  */
 package com.flowpowered.nbt;
 
+import java.util.Optional;
+
 /**
  * The {@code TAG_Byte} tag.
  */
@@ -67,6 +69,16 @@ public final class ByteTag extends Tag<Byte> {
         return value != 0;
     }
 
+	@Override
+	public Optional<ByteTag> getAsByteTag() {
+		return Optional.of(this);
+	}
+	
+	@Override
+	public Optional<Byte> getByteValue() {
+		return Optional.of(value);
+	}
+
     @Override
     public String toString() {
         String name = getName();
@@ -77,7 +89,8 @@ public final class ByteTag extends Tag<Byte> {
         return "TAG_Byte" + append + ": " + value;
     }
 
-    public ByteTag clone() {
+    @Override
+	public ByteTag clone() {
         return new ByteTag(getName(), value);
     }
 

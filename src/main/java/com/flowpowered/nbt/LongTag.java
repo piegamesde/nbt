@@ -23,6 +23,9 @@
  */
 package com.flowpowered.nbt;
 
+import java.util.Optional;
+import java.util.OptionalLong;
+
 /**
  * The {@code TAG_Long} tag.
  */
@@ -52,6 +55,16 @@ public final class LongTag extends Tag<Long> {
     public void setValue(Long value) {
         this.value = value;
     }
+    
+	@Override
+	public Optional<LongTag> getAsLongTag() {
+		return Optional.of(this);
+	}
+	
+	@Override
+	public OptionalLong getLongValue() {
+		return OptionalLong.of(value);
+	}
 
     @Override
     public String toString() {
@@ -63,7 +76,8 @@ public final class LongTag extends Tag<Long> {
         return "TAG_Long" + append + ": " + value;
     }
 
-    public LongTag clone() {
+    @Override
+	public LongTag clone() {
         return new LongTag(getName(), value);
     }
 }

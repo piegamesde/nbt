@@ -23,57 +23,119 @@
  */
 package com.flowpowered.nbt;
 
+import java.util.Optional;
+
 /**
  * The {@code TAG_Compound} tag.
  */
 public class CompoundTag extends Tag<CompoundMap> {
-    /**
-     * The value.
-     */
-    private CompoundMap value;
+	/**
+	 * The value.
+	 */
+	private CompoundMap value;
 
-    /**
-     * Creates the tag.
-     *
-     * @param name The name.
-     * @param value The value.
-     */
-    public CompoundTag(String name, CompoundMap value) {
-        super(TagType.TAG_COMPOUND, name);
-        //this.value = (CompoundMap) Collections.unmodifiableMap(value); This doesn't work anymore, needs a new solution
-        this.value = value;
-    }
+	/**
+	 * Creates the tag.
+	 *
+	 * @param name
+	 *            The name.
+	 * @param value
+	 *            The value.
+	 */
+	public CompoundTag(String name, CompoundMap value) {
+		super(TagType.TAG_COMPOUND, name);
+		// this.value = (CompoundMap) Collections.unmodifiableMap(value); This doesn't work anymore, needs a new solution
+		this.value = value;
+	}
 
-    @Override
-    public CompoundMap getValue() {
-        return value;
-    }
+	@Override
+	public CompoundMap getValue() {
+		return value;
+	}
 
-    @Override
-    public void setValue(CompoundMap value) {
-        this.value = value;
-    }
+	@Override
+	public void setValue(CompoundMap value) {
+		this.value = value;
+	}
+	
+	@Override
+	public Optional<CompoundTag> getAsCompoundTag() {
+		return Optional.of(this);
+	}
 
-    @Override
-    public String toString() {
-        String name = getName();
-        String append = "";
-        if (name != null && !name.equals("")) {
-            append = "(\"" + this.getName() + "\")";
-        }
 
-        StringBuilder bldr = new StringBuilder();
-        bldr.append("TAG_Compound").append(append).append(": ").append(value.size()).append(" entries\r\n{\r\n");
-        for (Tag<?> entry : value.values()) {
-            bldr.append("   ").append(entry.toString().replaceAll("\r\n", "\r\n   ")).append("\r\n");
-        }
-        bldr.append("}");
-        return bldr.toString();
-    }
+	public Optional<ByteTag> getAsByteTag(String childName) {
+		return Optional.ofNullable(value.get(childName)).flatMap(Tag::getAsByteTag);
+	}
 
-    @Override
+	public Optional<ShortTag> getAsShortTag(String childName) {
+		return Optional.ofNullable(value.get(childName)).flatMap(Tag::getAsShortTag);
+	}
+
+	public Optional<IntTag> getAsIntTag(String childName) {
+		return Optional.ofNullable(value.get(childName)).flatMap(Tag::getAsIntTag);
+	}
+
+	public Optional<LongTag> getAsLongTag(String childName) {
+		return Optional.ofNullable(value.get(childName)).flatMap(Tag::getAsLongTag);
+	}
+
+	public Optional<FloatTag> getAsFloatTag(String childName) {
+		return Optional.ofNullable(value.get(childName)).flatMap(Tag::getAsFloatTag);
+	}
+
+	public Optional<DoubleTag> getAsDoubleTag(String childName) {
+		return Optional.ofNullable(value.get(childName)).flatMap(Tag::getAsDoubleTag);
+	}
+
+	public Optional<ByteArrayTag> getAsByteArrayTag(String childName) {
+		return Optional.ofNullable(value.get(childName)).flatMap(Tag::getAsByteArrayTag);
+	}
+
+	public Optional<StringTag> getAsStringTag(String childName) {
+		return Optional.ofNullable(value.get(childName)).flatMap(Tag::getAsStringTag);
+	}
+
+	public Optional<ListTag<?>> getAsListTag(String childName) {
+		return Optional.ofNullable(value.get(childName)).flatMap(Tag::getAsListTag);
+	}
+
+	public Optional<CompoundTag> getAsCompoundTag(String childName) {
+		return Optional.ofNullable(value.get(childName)).flatMap(Tag::getAsCompoundTag);
+	}
+
+	public Optional<IntArrayTag> getAsIntArrayTag(String childName) {
+		return Optional.ofNullable(value.get(childName)).flatMap(Tag::getAsIntArrayTag);
+	}
+
+	public Optional<LongArrayTag> getAsLongArrayTag(String childName) {
+		return Optional.ofNullable(value.get(childName)).flatMap(Tag::getAsLongArrayTag);
+	}
+
+	public Optional<ShortArrayTag> getAsShortArrayTag(String childName) {
+		return Optional.ofNullable(value.get(childName)).flatMap(Tag::getAsShortArrayTag);
+	}
+
+	@Override
+	public String toString() {
+		String name = getName();
+		String append = "";
+		if (name != null && !name.equals("")) {
+			append = "(\"" + this.getName() + "\")";
+		}
+
+		StringBuilder bldr = new StringBuilder();
+		bldr.append("TAG_Compound").append(append).append(": ").append(value.size()).append(" entries\r\n{\r\n");
+		for (Tag<?> entry : value.values()) {
+			bldr.append("   ").append(entry.toString().replaceAll("\r\n", "\r\n   ")).append("\r\n");
+		}
+		bldr.append("}");
+		return bldr.toString();
+	}
+
+	@Override
 	public CompoundTag clone() {
-        CompoundMap map = new CompoundMap(value);
-        return new CompoundTag(getName(), map);
-    }
+		CompoundMap map = new CompoundMap(value);
+		return new CompoundTag(getName(), map);
+	}
 }

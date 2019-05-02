@@ -167,7 +167,7 @@ public class CompoundMap implements Map<String, Tag<?>>, Iterable<Tag<?>> {
     }
 
     @Override
-    public Tag remove(Object key) {
+    public Tag<?> remove(Object key) {
         return map.remove(key);
     }
 

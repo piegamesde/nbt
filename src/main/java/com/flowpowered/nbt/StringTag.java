@@ -23,6 +23,8 @@
  */
 package com.flowpowered.nbt;
 
+import java.util.Optional;
+
 /**
  * The {@code TAG_String} tag.
  */
@@ -52,6 +54,16 @@ public final class StringTag extends Tag<String> {
     public void setValue(String value) {
         this.value = value;
     }
+    
+	@Override
+	public Optional<StringTag> getAsStringTag() {
+		return Optional.of(this);
+	}
+	
+	@Override
+	public Optional<String> getStringValue() {
+		return Optional.of(value);
+	}
 
     @Override
     public String toString() {
@@ -63,7 +75,8 @@ public final class StringTag extends Tag<String> {
         return "TAG_String" + append + ": " + value;
     }
 
-    public StringTag clone() {
+    @Override
+	public StringTag clone() {
         return new StringTag(getName(), value);
     }
 }

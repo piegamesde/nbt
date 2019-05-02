@@ -23,6 +23,8 @@
  */
 package com.flowpowered.nbt;
 
+import java.util.Optional;
+
 /**
  * The {@code TAG_End} tag.
  */
@@ -43,13 +45,19 @@ public final class EndTag extends Tag<Object> {
     public void setValue(Object value) {
         throw new UnsupportedOperationException();
     }
+    
+	@Override
+	public Optional<EndTag> getAsEndTag() {
+		return Optional.of(this);
+	}
 
     @Override
     public String toString() {
         return "TAG_End";
     }
 
-    public EndTag clone() {
+    @Override
+	public EndTag clone() {
         return new EndTag();
     }
 }

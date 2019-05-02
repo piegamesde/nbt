@@ -24,6 +24,7 @@
 package com.flowpowered.nbt;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public class LongArrayTag extends Tag<long[]> {
     /**
@@ -50,6 +51,16 @@ public class LongArrayTag extends Tag<long[]> {
 	@Override
 	public void setValue(long[] value) {
 		this.value = value;
+	}
+
+	@Override
+	public Optional<LongArrayTag> getAsLongArrayTag() {
+		return Optional.of(this);
+	}
+
+	@Override
+	public Optional<long[]> getLongArrayValue() {
+		return Optional.of(value);
 	}
 
     @Override
