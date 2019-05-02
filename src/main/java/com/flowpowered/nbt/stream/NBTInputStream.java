@@ -77,23 +77,6 @@ public final class NBTInputStream implements Closeable {
 	}
 
 	/**
-	 * Creates a new {@link NBTInputStream}, which sources its data from the specified input stream. A flag must be passed which indicates if
-	 * the stream is compressed with GZIP or not. This assumes the stream uses big endian encoding.
-	 *
-	 * @param is
-	 *            The input stream.
-	 * @param compressed
-	 *            A flag indicating if the stream is compressed.
-	 * @throws java.io.IOException
-	 *             if an I/O error occurs.
-	 * @deprecated Use {@link #NBTInputStream(InputStream, int)} instead
-	 */
-	@Deprecated
-	public NBTInputStream(InputStream is, boolean compressed) throws IOException {
-		this(is, compressed, ByteOrder.BIG_ENDIAN);
-	}
-
-	/**
 	 * Creates a new {@link NBTInputStream}, which will source its data from the specified input stream. The stream may be wrapped into a
 	 * decompressing input stream depending on the chosen compression method. This assumes the stream uses big endian encoding.
 	 *
@@ -107,25 +90,6 @@ public final class NBTInputStream implements Closeable {
 	 */
 	public NBTInputStream(InputStream is, int compression) throws IOException {
 		this(is, compression, ByteOrder.BIG_ENDIAN);
-	}
-
-	/**
-	 * Creates a new {@link NBTInputStream}, which sources its data from the specified input stream. A flag must be passed which indicates if
-	 * the stream is compressed with GZIP or not.
-	 *
-	 * @param is
-	 *            The input stream.
-	 * @param compressed
-	 *            A flag indicating if the stream is compressed.
-	 * @param endianness
-	 *            Whether to read numbers from the InputStream with little endian encoding.
-	 * @throws java.io.IOException
-	 *             if an I/O error occurs.
-	 * @deprecated Use {@link #NBTInputStream(InputStream, int, ByteOrder)} instead
-	 */
-	@Deprecated
-	public NBTInputStream(InputStream is, boolean compressed, ByteOrder endianness) throws IOException {
-		this(is, compressed ? GZIP_COMPRESSION : NO_COMPRESSION, endianness);
 	}
 
 	/**
@@ -308,13 +272,5 @@ public final class NBTInputStream implements Closeable {
 	@Override
 	public void close() throws IOException {
 		inputStream.close();
-	}
-
-	/**
-	 * @return whether this NBTInputStream reads numbers in little-endian format.
-	 */
-	@Deprecated
-	public ByteOrder getByteOrder() {
-		throw new UnsupportedOperationException();
 	}
 }

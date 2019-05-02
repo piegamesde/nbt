@@ -28,7 +28,6 @@ import java.io.DataInputStream;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteOrder;
 
 /**
  * A wrapper around {@link DataInputStream} that allows changing the endianness of data. By default, everything in Java is big-endian
@@ -37,11 +36,6 @@ public class LittleEndianInputStream extends FilterInputStream implements DataIn
 
 	public LittleEndianInputStream(InputStream stream) {
 		super(stream instanceof DataInputStream ? stream : new DataInputStream(stream));
-	}
-
-	@Deprecated
-	public ByteOrder getEndianness() {
-		return ByteOrder.LITTLE_ENDIAN;
 	}
 
 	protected DataInputStream getBackingStream() {

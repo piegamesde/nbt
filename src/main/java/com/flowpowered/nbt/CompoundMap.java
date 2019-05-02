@@ -25,7 +25,6 @@ package com.flowpowered.nbt;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -61,17 +60,6 @@ public class CompoundMap implements Map<String, Tag<?>>, Iterable<Tag<?>> {
      */
     public CompoundMap(Map<String, Tag<?>> initial) {
         this(initial.values(), false, false);
-    }
-
-    /**
-     * Creates a CompoundMap back by a LinkedHashMap, so insertion order is preserved.<br> <br> The map is initialised using the values given in the HashMap.  The constructor is included for backward
-     * compatibility, it is recommended to use the one that takes Map<String, Tag> instead.
-     *
-     * @param initial the initial values for the CompoundMap
-     */
-    @Deprecated
-    public CompoundMap(HashMap<String, Tag<?>> initial) {
-        this((Map<String, Tag<?>>) initial);
     }
 
     /**

@@ -60,23 +60,6 @@ public final class NBTOutputStream implements Closeable {
 	}
 
 	/**
-	 * Creates a new {@link NBTOutputStream}, which will write data to the specified underlying output stream. A flag indicates if the output
-	 * should be compressed with GZIP or not.
-	 *
-	 * @param os
-	 *            The output stream.
-	 * @param compressed
-	 *            A flag that indicates if the output should be compressed.
-	 * @throws java.io.IOException
-	 *             if an I/O error occurs.
-	 * @deprecated Use {@link #NBTOutputStream(InputStream, int)} instead
-	 */
-	@Deprecated
-	public NBTOutputStream(OutputStream os, boolean compressed) throws IOException {
-		this(os, compressed, ByteOrder.BIG_ENDIAN);
-	}
-
-	/**
 	 * Creates a new {@link NBTOutputStream}, which will write data to the specified underlying output stream. The stream may be wrapped into a
 	 * compressing output stream depending on the chosen compression method. A flag indicates if the output should be compressed with GZIP or
 	 * not.
@@ -91,25 +74,6 @@ public final class NBTOutputStream implements Closeable {
 	 */
 	public NBTOutputStream(OutputStream os, int compression) throws IOException {
 		this(os, compression, ByteOrder.BIG_ENDIAN);
-	}
-
-	/**
-	 * Creates a new {@link NBTOutputStream}, which will write data to the specified underlying output stream. A flag indicates if the output
-	 * should be compressed with GZIP or not.
-	 *
-	 * @param os
-	 *            The output stream.
-	 * @param compressed
-	 *            A flag that indicates if the output should be compressed.
-	 * @param endianness
-	 *            A flag that indicates if numbers in the output should be output in little-endian format.
-	 * @throws java.io.IOException
-	 *             if an I/O error occurs.
-	 * @deprecated Use {@link #NBTOutputStream(InputStream, int, ByteOrder)} instead
-	 */
-	@Deprecated
-	public NBTOutputStream(OutputStream os, boolean compressed, ByteOrder endianness) throws IOException {
-		this(os, compressed ? NBTInputStream.GZIP_COMPRESSION : NBTInputStream.NO_COMPRESSION, endianness);
 	}
 
 	/**
@@ -432,14 +396,6 @@ public final class NBTOutputStream implements Closeable {
 	@Override
 	public void close() throws IOException {
 		outputStream.close();
-	}
-
-	/**
-	 * @return whether this NBTInputStream writes numbers in little-endian format.
-	 */
-	@Deprecated
-	public ByteOrder getEndianness() {
-		throw new UnsupportedOperationException();
 	}
 
 	/**

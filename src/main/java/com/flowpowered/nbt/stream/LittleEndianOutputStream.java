@@ -28,17 +28,11 @@ import java.io.DataOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.ByteOrder;
 
 public class LittleEndianOutputStream extends FilterOutputStream implements DataOutput {
 	
 	public LittleEndianOutputStream(OutputStream backingStream) {
 		super(backingStream instanceof DataOutputStream ? (DataOutputStream) backingStream : new DataOutputStream(backingStream));
-	}
-
-	@Deprecated
-	public ByteOrder getEndianness() {
-		return ByteOrder.LITTLE_ENDIAN;
 	}
 
 	protected DataOutputStream getBackingStream() {
