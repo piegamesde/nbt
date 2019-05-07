@@ -44,7 +44,6 @@ public class CompoundTag extends Tag<CompoundMap> {
 	 */
 	public CompoundTag(String name, CompoundMap value) {
 		super(TagType.TAG_COMPOUND, name);
-		// this.value = (CompoundMap) Collections.unmodifiableMap(value); This doesn't work anymore, needs a new solution
 		this.value = value;
 	}
 
@@ -62,7 +61,6 @@ public class CompoundTag extends Tag<CompoundMap> {
 	public Optional<CompoundTag> getAsCompoundTag() {
 		return Optional.of(this);
 	}
-
 
 	public Optional<ByteTag> getAsByteTag(String childName) {
 		return Optional.ofNullable(value.get(childName)).flatMap(Tag::getAsByteTag);
@@ -114,6 +112,50 @@ public class CompoundTag extends Tag<CompoundMap> {
 
 	public Optional<ShortArrayTag> getAsShortArrayTag(String childName) {
 		return Optional.ofNullable(value.get(childName)).flatMap(Tag::getAsShortArrayTag);
+	}
+	
+	public Optional<Byte> getByteValue(String childName) {
+		return getAsByteTag(childName).map(Tag::getValue);
+	}
+
+	public Optional<Short> getShortValue(String childName) {
+		return getAsShortTag(childName).map(Tag::getValue);
+	}
+
+	public Optional<Integer> getIntValue(String childName) {
+		return getAsIntTag(childName).map(Tag::getValue);
+	}
+
+	public Optional<Long> getLongValue(String childName) {
+		return getAsLongTag(childName).map(Tag::getValue);
+	}
+
+	public Optional<Float> getFloatValue(String childName) {
+		return getAsFloatTag(childName).map(Tag::getValue);
+	}
+
+	public Optional<Double> getDoubleValue(String childName) {
+		return getAsDoubleTag(childName).map(Tag::getValue);
+	}
+
+	public Optional<byte[]> getByteArrayValue(String childName) {
+		return getAsByteArrayTag(childName).map(Tag::getValue);
+	}
+
+	public Optional<String> getStringValue(String childName) {
+		return getAsStringTag(childName).map(Tag::getValue);
+	}
+
+	public Optional<int[]> getIntArrayValue(String childName) {
+		return getAsIntArrayTag(childName).map(Tag::getValue);
+	}
+
+	public Optional<long[]> getLongArrayValue(String childName) {
+		return getAsLongArrayTag(childName).map(Tag::getValue);
+	}
+
+	public Optional<short[]> getShortArrayValue(String childName) {
+		return getAsShortArrayTag(childName).map(Tag::getValue);
 	}
 
 	@Override

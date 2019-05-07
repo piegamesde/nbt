@@ -25,6 +25,7 @@ package com.flowpowered.nbt;
 
 import java.security.cert.PKIXRevocationChecker.Option;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -148,6 +149,57 @@ public class ListTag<T extends Tag<?>> extends Tag<List<T>> {
 		return getAsList(TagType.TAG_SHORT_ARRAY);
 	}
 
+	public List<ByteTag> getByteListValue() {
+		return getAsByteTagList().map(ListTag::getValue).orElse(Collections.emptyList());
+	}
+
+	public List<ShortTag> getShortListValue() {
+		return getAsShortTagList().map(ListTag::getValue).orElse(Collections.emptyList());
+	}
+
+	public List<IntTag> getIntListValue() {
+		return getAsIntTagList().map(ListTag::getValue).orElse(Collections.emptyList());
+	}
+
+	public List<LongTag> getLongListValue() {
+		return getAsLongTagList().map(ListTag::getValue).orElse(Collections.emptyList());
+	}
+
+	public List<FloatTag> getFloatListValue() {
+		return getAsFloatTagList().map(ListTag::getValue).orElse(Collections.emptyList());
+	}
+
+	public List<DoubleTag> getDoubleListValue() {
+		return getAsDoubleTagList().map(ListTag::getValue).orElse(Collections.emptyList());
+	}
+
+	public List<ByteArrayTag> getByteArrayListValue() {
+		return getAsByteArrayTagList().map(ListTag::getValue).orElse(Collections.emptyList());
+	}
+
+	public List<StringTag> getStringListValue() {
+		return getAsStringTagList().map(ListTag::getValue).orElse(Collections.emptyList());
+	}
+
+	public List<ListTag<?>> getListTagListValue() {
+		return getAsListTagList().map(ListTag::getValue).orElse(Collections.emptyList());
+	}
+
+	public List<CompoundTag> getCompoundTagListValue() {
+		return getAsCompoundTagList().map(ListTag::getValue).orElse(Collections.emptyList());
+	}
+
+	public List<IntArrayTag> getIntArrayListValue() {
+		return getAsIntArrayTagList().map(ListTag::getValue).orElse(Collections.emptyList());
+	}
+
+	public List<LongArrayTag> getLongArrayListValue() {
+		return getAsLongArrayTagList().map(ListTag::getValue).orElse(Collections.emptyList());
+	}
+
+	public List<ShortArrayTag> getShortArrayListValue() {
+		return getAsShortArrayTagList().map(ListTag::getValue).orElse(Collections.emptyList());
+	}
 
     @Override
     public String toString() {
