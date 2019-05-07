@@ -73,11 +73,6 @@ public final class ByteTag extends Tag<Byte> {
 	public Optional<ByteTag> getAsByteTag() {
 		return Optional.of(this);
 	}
-	
-	@Override
-	public Optional<Byte> getByteValue() {
-		return Optional.of(value);
-	}
 
     @Override
     public String toString() {

@@ -24,7 +24,6 @@
 package com.flowpowered.nbt;
 
 import java.util.Optional;
-import java.util.OptionalDouble;
 
 /**
  * The {@code TAG_Double} tag.
@@ -59,11 +58,6 @@ public final class DoubleTag extends Tag<Double> {
 	@Override
 	public Optional<DoubleTag> getAsDoubleTag() {
 		return Optional.of(this);
-	}
-	
-	@Override
-	public OptionalDouble getDoubleValue() {
-		return OptionalDouble.of(value);
 	}
 
     @Override

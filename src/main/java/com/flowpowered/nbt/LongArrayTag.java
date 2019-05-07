@@ -58,11 +58,6 @@ public class LongArrayTag extends Tag<long[]> {
 		return Optional.of(this);
 	}
 
-	@Override
-	public Optional<long[]> getLongArrayValue() {
-		return Optional.of(value);
-	}
-
     @Override
     public String toString() {
         StringBuilder hex = new StringBuilder();

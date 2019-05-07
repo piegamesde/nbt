@@ -27,9 +27,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.OptionalDouble;
-import java.util.OptionalInt;
-import java.util.OptionalLong;
 
 /**
  * Represents a single NBT tag.
@@ -145,50 +142,6 @@ public abstract class Tag<T> implements Comparable<Tag<?>> {
 	}
 
 	public Optional<ShortArrayTag> getAsShortArrayTag() {
-		return Optional.empty();
-	}
-
-	public Optional<Byte> getByteValue() {
-		return Optional.empty();
-	}
-
-	public Optional<Short> getShortValue() {
-		return Optional.empty();
-	}
-
-	public OptionalInt getIntValue() {
-		return OptionalInt.empty();
-	}
-
-	public OptionalLong getLongValue() {
-		return OptionalLong.empty();
-	}
-
-	public Optional<Float> getFloatValue() {
-		return Optional.empty();
-	}
-
-	public OptionalDouble getDoubleValue() {
-		return OptionalDouble.empty();
-	}
-
-	public Optional<byte[]> getByteArrayValue() {
-		return Optional.empty();
-	}
-
-	public Optional<String> getStringValue() {
-		return Optional.empty();
-	}
-
-	public Optional<int[]> getIntArrayValue() {
-		return Optional.empty();
-	}
-
-	public Optional<long[]> getLongArrayValue() {
-		return Optional.empty();
-	}
-
-	public Optional<short[]> getShortArrayValue() {
 		return Optional.empty();
 	}
 	

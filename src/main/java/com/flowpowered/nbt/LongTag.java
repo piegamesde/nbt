@@ -24,7 +24,6 @@
 package com.flowpowered.nbt;
 
 import java.util.Optional;
-import java.util.OptionalLong;
 
 /**
  * The {@code TAG_Long} tag.
@@ -59,11 +58,6 @@ public final class LongTag extends Tag<Long> {
 	@Override
 	public Optional<LongTag> getAsLongTag() {
 		return Optional.of(this);
-	}
-	
-	@Override
-	public OptionalLong getLongValue() {
-		return OptionalLong.of(value);
 	}
 
     @Override

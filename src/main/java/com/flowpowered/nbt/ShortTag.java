@@ -59,11 +59,6 @@ public final class ShortTag extends Tag<Short> {
 	public Optional<ShortTag> getAsShortTag() {
 		return Optional.of(this);
 	}
-	
-	@Override
-	public Optional<Short> getShortValue() {
-		return Optional.of(value);
-	}
 
     @Override
     public String toString() {

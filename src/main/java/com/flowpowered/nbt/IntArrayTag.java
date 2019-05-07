@@ -57,11 +57,6 @@ public class IntArrayTag extends Tag<int[]> {
 	public Optional<IntArrayTag> getAsIntArrayTag() {
 		return Optional.of(this);
 	}
-	
-	@Override
-	public Optional<int[]> getIntArrayValue() {
-		return Optional.of(value);
-	}
 
     @Override
     public String toString() {

@@ -58,11 +58,6 @@ public class ShortArrayTag extends Tag<short[]> {
 		return Optional.of(this);
 	}
 
-	@Override
-	public Optional<short[]> getShortArrayValue() {
-		return Optional.of(value);
-	}
-
     @Override
     public String toString() {
         StringBuilder hex = new StringBuilder();

@@ -24,7 +24,6 @@
 package com.flowpowered.nbt;
 
 import java.util.Optional;
-import java.util.OptionalInt;
 
 /**
  * The {@code TAG_Int} tag.
@@ -59,12 +58,6 @@ public final class IntTag extends Tag<Integer> {
 	@Override
 	public Optional<IntTag> getAsIntTag() {
 		return Optional.of(this);
-	}
-
-	
-	@Override
-	public OptionalInt getIntValue() {
-		return OptionalInt.of(value);
 	}
 
 	@Override

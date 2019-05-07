@@ -60,11 +60,6 @@ public final class ByteArrayTag extends Tag<byte[]> {
 	public Optional<ByteArrayTag> getAsByteArrayTag() {
 		return Optional.of(this);
 	}
-	
-	@Override
-	public Optional<byte[]> getByteArrayValue() {
-		return Optional.of(value);
-	}
 
 	@Override
     public String toString() {

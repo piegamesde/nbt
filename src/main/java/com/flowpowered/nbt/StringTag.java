@@ -59,11 +59,6 @@ public final class StringTag extends Tag<String> {
 	public Optional<StringTag> getAsStringTag() {
 		return Optional.of(this);
 	}
-	
-	@Override
-	public Optional<String> getStringValue() {
-		return Optional.of(value);
-	}
 
     @Override
     public String toString() {

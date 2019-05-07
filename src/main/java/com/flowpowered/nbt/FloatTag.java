@@ -59,11 +59,6 @@ public final class FloatTag extends Tag<Float> {
 	public Optional<FloatTag> getAsFloatTag() {
 		return Optional.of(this);
 	}
-	
-	@Override
-	public Optional<Float> getFloatValue() {
-		return Optional.of(value);
-	}
 
     @Override
     public String toString() {
