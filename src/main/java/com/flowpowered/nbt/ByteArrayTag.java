@@ -24,6 +24,7 @@
 package com.flowpowered.nbt;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * The {@code TAG_Byte_Array} tag.
@@ -32,7 +33,7 @@ public final class ByteArrayTag extends Tag<byte[]> {
     /**
      * The value.
      */
-    private final byte[] value;
+    private byte[] value;
 
     /**
      * Creates the tag.
@@ -51,6 +52,16 @@ public final class ByteArrayTag extends Tag<byte[]> {
     }
 
     @Override
+    public void setValue(byte[] value) {
+        this.value = value;
+    }
+
+	@Override
+	public Optional<ByteArrayTag> getAsByteArrayTag() {
+		return Optional.of(this);
+	}
+
+	@Override
     public String toString() {
         StringBuilder hex = new StringBuilder();
         for (byte b : value) {
@@ -69,7 +80,8 @@ public final class ByteArrayTag extends Tag<byte[]> {
         return "TAG_Byte_Array" + append + ": " + hex.toString();
     }
 
-    public ByteArrayTag clone() {
+    @Override
+	public ByteArrayTag clone() {
         byte[] clonedArray = cloneArray(value);
 
         return new ByteArrayTag(getName(), clonedArray);

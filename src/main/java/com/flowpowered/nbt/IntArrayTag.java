@@ -24,12 +24,13 @@
 package com.flowpowered.nbt;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public class IntArrayTag extends Tag<int[]> {
     /**
      * The value.
      */
-    private final int[] value;
+    private int[] value;
 
     /**
      * Creates the tag.
@@ -46,6 +47,16 @@ public class IntArrayTag extends Tag<int[]> {
     public int[] getValue() {
         return value;
     }
+
+    @Override
+    public void setValue(int[] value) {
+        this.value = value;
+    }
+    
+	@Override
+	public Optional<IntArrayTag> getAsIntArrayTag() {
+		return Optional.of(this);
+	}
 
     @Override
     public String toString() {
@@ -66,7 +77,8 @@ public class IntArrayTag extends Tag<int[]> {
         return "TAG_Int_Array" + append + ": " + hex.toString();
     }
 
-    public IntArrayTag clone() {
+    @Override
+	public IntArrayTag clone() {
         int[] clonedArray = cloneArray(value);
 
         return new IntArrayTag(getName(), clonedArray);

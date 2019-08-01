@@ -24,12 +24,13 @@
 package com.flowpowered.nbt;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public class ShortArrayTag extends Tag<short[]> {
     /**
      * The value.
      */
-    private final short[] value;
+    private short[] value;
 
     /**
      * Creates the tag.
@@ -46,6 +47,16 @@ public class ShortArrayTag extends Tag<short[]> {
     public short[] getValue() {
         return value;
     }
+
+    @Override
+    public void setValue(short[] value) {
+        this.value = value;
+    }
+
+	@Override
+	public Optional<ShortArrayTag> getAsShortArrayTag() {
+		return Optional.of(this);
+	}
 
     @Override
     public String toString() {
@@ -66,7 +77,8 @@ public class ShortArrayTag extends Tag<short[]> {
         return "TAG_Short_Array" + append + ": " + hex.toString();
     }
 
-    public ShortArrayTag clone() {
+    @Override
+	public ShortArrayTag clone() {
         short[] clonedArray = cloneArray(value);
 
         return new ShortArrayTag(getName(), clonedArray);

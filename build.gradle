@@ -13,7 +13,7 @@ apply plugin: 'signing'
 ext.projectName = 'Flow NBT'
 group = 'com.flowpowered'
 archivesBaseName = 'flow-nbt'
-version = '1.1.0'
+version = '1.2.0'
 ext.packaging = 'jar'
 ext.inceptionYear = '2011'
 ext.url = 'https://flowpowered.com/nbt'
@@ -39,7 +39,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.saliman:gradle-cobertura-plugin:2.2.8' // Coveralls dependency
+        classpath 'net.saliman:gradle-cobertura-plugin:2.6.0' // Coveralls dependency
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.10.0'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0'
     }
@@ -83,8 +83,8 @@ license {
 
 // Source compiler configuration
 configure([compileJava, compileTestJava]) {
-    sourceCompatibility = '1.7'
-    targetCompatibility = '1.7'
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
     options.encoding = 'UTF-8'
     options.compilerArgs << '-Xlint:all'
     options.compilerArgs << '-Xlint:-path'
@@ -138,7 +138,8 @@ uploadArchives {
         } else {
             // Set variable to releases repository URL
             ext.sonatypeUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-
+			
+			/*
             // Artifact signing
             signing {
                 // Sign JAR artifacts
@@ -149,6 +150,7 @@ uploadArchives {
                     org.gradle.api.artifacts.maven.MavenDeployment deployment -> signing.signPom(deployment)
                 }
             }
+            */
         }
 
         // Set login credentials for repository

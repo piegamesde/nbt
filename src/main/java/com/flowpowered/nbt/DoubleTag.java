@@ -23,6 +23,8 @@
  */
 package com.flowpowered.nbt;
 
+import java.util.Optional;
+
 /**
  * The {@code TAG_Double} tag.
  */
@@ -30,7 +32,7 @@ public final class DoubleTag extends Tag<Double> {
     /**
      * The value.
      */
-    private final double value;
+    private double value;
 
     /**
      * Creates the tag.
@@ -49,6 +51,16 @@ public final class DoubleTag extends Tag<Double> {
     }
 
     @Override
+    public void setValue(Double value) {
+        this.value = value;
+    }
+    
+	@Override
+	public Optional<DoubleTag> getAsDoubleTag() {
+		return Optional.of(this);
+	}
+
+    @Override
     public String toString() {
         String name = getName();
         String append = "";
@@ -58,7 +70,8 @@ public final class DoubleTag extends Tag<Double> {
         return "TAG_Double" + append + ": " + value;
     }
 
-    public DoubleTag clone() {
+    @Override
+	public DoubleTag clone() {
         return new DoubleTag(getName(), value);
     }
 }

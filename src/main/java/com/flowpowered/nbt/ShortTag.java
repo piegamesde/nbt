@@ -23,14 +23,16 @@
  */
 package com.flowpowered.nbt;
 
+import java.util.Optional;
+
 /**
- * The {@code TAG_Short} tag.
+ * The {@code TAG_Short} tag. This is not part of the official NBT specification; do not use if you want to be fully NBT compliant.
  */
 public final class ShortTag extends Tag<Short> {
     /**
      * The value.
      */
-    private final short value;
+    private short value;
 
     /**
      * Creates the tag.
@@ -49,6 +51,16 @@ public final class ShortTag extends Tag<Short> {
     }
 
     @Override
+    public void setValue(Short value) {
+        this.value = value;
+    }
+
+	@Override
+	public Optional<ShortTag> getAsShortTag() {
+		return Optional.of(this);
+	}
+
+    @Override
     public String toString() {
         String name = getName();
         String append = "";
@@ -58,7 +70,8 @@ public final class ShortTag extends Tag<Short> {
         return "TAG_Short" + append + ": " + value;
     }
 
-    public ShortTag clone() {
+    @Override
+	public ShortTag clone() {
         return new ShortTag(getName(), value);
     }
 }

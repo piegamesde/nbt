@@ -23,9 +23,10 @@
  */
 package com.flowpowered.nbt;
 
+import java.security.cert.PKIXRevocationChecker.Option;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The {@code TAG_List} tag.
@@ -34,11 +35,11 @@ public class ListTag<T extends Tag<?>> extends Tag<List<T>> {
     /**
      * The type of entries within this list.
      */
-    private final Class<T> type;
+    private final TagType type;
     /**
      * The value.
      */
-    private final List<T> value;
+    private List<T> value;
 
     /**
      * Creates the tag.
@@ -47,10 +48,10 @@ public class ListTag<T extends Tag<?>> extends Tag<List<T>> {
      * @param type The type of item in the list.
      * @param value The value.
      */
-    public ListTag(String name, Class<T> type, List<T> value) {
+    public ListTag(String name, TagType type, List<T> value) {
         super(TagType.TAG_LIST, name);
         this.type = type;
-        this.value = Collections.unmodifiableList(value);
+        this.value = value;
     }
 
     /**
@@ -58,7 +59,7 @@ public class ListTag<T extends Tag<?>> extends Tag<List<T>> {
      *
      * @return The type of item in this list.
      */
-    public Class<T> getElementType() {
+    public TagType getElementType() {
         return type;
     }
 
@@ -66,6 +67,86 @@ public class ListTag<T extends Tag<?>> extends Tag<List<T>> {
     public List<T> getValue() {
         return value;
     }
+
+    @Override
+    public void setValue(List<T> value) {
+        this.value = value;
+    }
+
+	@Override
+	public Optional<ListTag<?>> getAsListTag() {
+		return Optional.of(this);
+	}
+
+	/**
+	 * Typesafe way to cast this object into a specialized instance.
+	 * 
+	 * @param type
+	 *            The target type of child elements that is desired
+	 * @return {@code this}, cast in adequate way and wrapped in an {@link Option} if the current tag type matches, or {@link Optional#empty()}
+	 *         otherwise.
+	 * @param <T>
+	 *            The tag type of the child tags. Must match {@code type.getTagClass()}.
+	 */
+	@SuppressWarnings({ "unchecked", "hiding" })
+	private <T extends Tag<?>> Optional<ListTag<T>> getAsList(TagType type) {
+    	if (this.type == type)
+    		return Optional.of((ListTag<T>) this);
+    	else
+    		return Optional.empty();
+    }
+    
+	public Optional<ListTag<ByteTag>> getAsByteTagList() {
+		return getAsList(TagType.TAG_BYTE);
+	}
+
+	public Optional<ListTag<ShortTag>> getAsShortTagList() {
+		return getAsList(TagType.TAG_SHORT);
+	}
+
+	public Optional<ListTag<IntTag>> getAsIntTagList() {
+		return getAsList(TagType.TAG_INT);
+	}
+
+	public Optional<ListTag<LongTag>> getAsLongTagList() {
+		return getAsList(TagType.TAG_LONG);
+	}
+
+	public Optional<ListTag<FloatTag>> getAsFloatTagList() {
+		return getAsList(TagType.TAG_FLOAT);
+	}
+
+	public Optional<ListTag<DoubleTag>> getAsDoubleTagList() {
+		return getAsList(TagType.TAG_DOUBLE);
+	}
+
+	public Optional<ListTag<ByteArrayTag>> getAsByteArrayTagList() {
+		return getAsList(TagType.TAG_BYTE_ARRAY);
+	}
+
+	public Optional<ListTag<StringTag>> getAsStringTagList() {
+		return getAsList(TagType.TAG_STRING);
+	}
+
+	public Optional<ListTag<ListTag<?>>> getAsListTagList() {
+		return getAsList(TagType.TAG_LIST);
+	}
+
+	public Optional<ListTag<CompoundTag>> getAsCompoundTagList() {
+		return getAsList(TagType.TAG_COMPOUND);
+	}
+
+	public Optional<ListTag<IntArrayTag>> getAsIntArrayTagList() {
+		return getAsList(TagType.TAG_INT_ARRAY);
+	}
+
+	public Optional<ListTag<LongArrayTag>> getAsLongArrayTagList() {
+		return getAsList(TagType.TAG_LONG_ARRAY);
+	}
+
+	public Optional<ListTag<ShortArrayTag>> getAsShortArrayTagList() {
+		return getAsList(TagType.TAG_SHORT_ARRAY);
+	}
 
     @Override
     public String toString() {
@@ -76,7 +157,7 @@ public class ListTag<T extends Tag<?>> extends Tag<List<T>> {
         }
 
         StringBuilder bldr = new StringBuilder();
-        bldr.append("TAG_List").append(append).append(": ").append(value.size()).append(" entries of type ").append(TagType.getByTagClass(type).getTypeName()).append("\r\n{\r\n");
+        bldr.append("TAG_List").append(append).append(": ").append(value.size()).append(" entries of type ").append(type.getTypeName()).append("\r\n{\r\n");
         for (Tag<?> t : value) {
             bldr.append("   ").append(t.toString().replaceAll("\r\n", "\r\n   ")).append("\r\n");
         }

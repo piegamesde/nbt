@@ -23,6 +23,8 @@
  */
 package com.flowpowered.nbt;
 
+import java.util.Optional;
+
 /**
  * The {@code TAG_Int} tag.
  */
@@ -30,7 +32,7 @@ public final class IntTag extends Tag<Integer> {
     /**
      * The value.
      */
-    private final int value;
+    private int value;
 
     /**
      * Creates the tag.
@@ -49,6 +51,16 @@ public final class IntTag extends Tag<Integer> {
     }
 
     @Override
+    public void setValue(Integer value) {
+        this.value = value;
+    }
+
+	@Override
+	public Optional<IntTag> getAsIntTag() {
+		return Optional.of(this);
+	}
+
+	@Override
     public String toString() {
         String name = getName();
         String append = "";
@@ -58,7 +70,8 @@ public final class IntTag extends Tag<Integer> {
         return "TAG_Int" + append + ": " + value;
     }
 
-    public IntTag clone() {
+    @Override
+	public IntTag clone() {
         return new IntTag(getName(), value);
     }
 }

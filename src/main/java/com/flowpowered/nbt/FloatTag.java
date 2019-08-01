@@ -23,6 +23,8 @@
  */
 package com.flowpowered.nbt;
 
+import java.util.Optional;
+
 /**
  * The {@code TAG_Float} tag.
  */
@@ -30,7 +32,7 @@ public final class FloatTag extends Tag<Float> {
     /**
      * The value.
      */
-    private final float value;
+    private float value;
 
     /**
      * Creates the tag.
@@ -49,6 +51,16 @@ public final class FloatTag extends Tag<Float> {
     }
 
     @Override
+    public void setValue(Float value) {
+        this.value = value;
+    }
+
+    @Override
+	public Optional<FloatTag> getAsFloatTag() {
+		return Optional.of(this);
+	}
+
+    @Override
     public String toString() {
         String name = getName();
         String append = "";
@@ -58,7 +70,8 @@ public final class FloatTag extends Tag<Float> {
         return "TAG_Float" + append + ": " + value;
     }
 
-    public FloatTag clone() {
+    @Override
+	public FloatTag clone() {
         return new FloatTag(getName(), value);
     }
 }

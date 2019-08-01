@@ -23,6 +23,8 @@
  */
 package com.flowpowered.nbt;
 
+import java.util.Optional;
+
 /**
  * The {@code TAG_Byte} tag.
  */
@@ -30,7 +32,7 @@ public final class ByteTag extends Tag<Byte> {
     /**
      * The value.
      */
-    private final byte value;
+    private byte value;
 
     /**
      * Creates the tag.<br> Boolean true is stored as 1 and boolean false is stored as 0.
@@ -58,9 +60,19 @@ public final class ByteTag extends Tag<Byte> {
         return value;
     }
 
+    @Override
+    public void setValue(Byte value) {
+        this.value = value;
+    }
+
     public boolean getBooleanValue() {
         return value != 0;
     }
+
+	@Override
+	public Optional<ByteTag> getAsByteTag() {
+		return Optional.of(this);
+	}
 
     @Override
     public String toString() {
@@ -72,7 +84,8 @@ public final class ByteTag extends Tag<Byte> {
         return "TAG_Byte" + append + ": " + value;
     }
 
-    public ByteTag clone() {
+    @Override
+	public ByteTag clone() {
         return new ByteTag(getName(), value);
     }
 
