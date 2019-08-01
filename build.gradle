@@ -13,7 +13,7 @@ apply plugin: 'signing'
 ext.projectName = 'Flow NBT'
 group = 'com.flowpowered'
 archivesBaseName = 'flow-nbt'
-version = '1.0.1-SNAPSHOT'
+version = '1.2.0'
 ext.packaging = 'jar'
 ext.inceptionYear = '2011'
 ext.url = 'https://flowpowered.com/nbt'
@@ -138,7 +138,8 @@ uploadArchives {
         } else {
             // Set variable to releases repository URL
             ext.sonatypeUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-
+			
+			/*
             // Artifact signing
             signing {
                 // Sign JAR artifacts
@@ -149,6 +150,7 @@ uploadArchives {
                     org.gradle.api.artifacts.maven.MavenDeployment deployment -> signing.signPom(deployment)
                 }
             }
+            */
         }
 
         // Set login credentials for repository
