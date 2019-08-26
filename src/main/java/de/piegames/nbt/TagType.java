@@ -27,21 +27,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum TagType {
-    TAG_END(EndTag.class, "TAG_End", 0),
-    TAG_BYTE(ByteTag.class, "TAG_Byte", 1),
-    TAG_SHORT(ShortTag.class, "TAG_Short", 2),
-    TAG_INT(IntTag.class, "TAG_Int", 3),
-    TAG_LONG(LongTag.class, "TAG_Long", 4),
-    TAG_FLOAT(FloatTag.class, "TAG_Float", 5),
-    TAG_DOUBLE(DoubleTag.class, "TAG_Double", 6),
-    TAG_BYTE_ARRAY(ByteArrayTag.class, "TAG_Byte_Array", 7),
-    TAG_STRING(StringTag.class, "TAG_String", 8),
-    TAG_LIST((Class) ListTag.class, "TAG_List", 9),
+    TAG_END(EndTag.class, "TAG_End", 0, 0),
+    TAG_BYTE(ByteTag.class, "TAG_Byte", 1, Byte.BYTES),
+    TAG_SHORT(ShortTag.class, "TAG_Short", 2, Short.BYTES),
+    TAG_INT(IntTag.class, "TAG_Int", 3, Integer.BYTES),
+    TAG_LONG(LongTag.class, "TAG_Long", 4, Long.BYTES),
+    TAG_FLOAT(FloatTag.class, "TAG_Float", 5, Float.BYTES),
+    TAG_DOUBLE(DoubleTag.class, "TAG_Double", 6, Double.BYTES),
+    TAG_BYTE_ARRAY(ByteArrayTag.class, "TAG_Byte_Array", 7, Byte.BYTES),
+    TAG_STRING(StringTag.class, "TAG_String", 8, -1),
+    TAG_LIST((Class) ListTag.class, "TAG_List", 9, -1),
     // Java generics, y u so suck
-    TAG_COMPOUND(CompoundTag.class, "TAG_Compound", 10),
-    TAG_INT_ARRAY(IntArrayTag.class, "TAG_Int_Array", 11),
-    TAG_LONG_ARRAY(LongArrayTag.class, "TAG_Long_Array", 12),
-    TAG_SHORT_ARRAY(ShortArrayTag.class, "TAG_Short_Array", 100),;
+    TAG_COMPOUND(CompoundTag.class, "TAG_Compound", 10, -1),
+    TAG_INT_ARRAY(IntArrayTag.class, "TAG_Int_Array", 11, Integer.BYTES),
+    TAG_LONG_ARRAY(LongArrayTag.class, "TAG_Long_Array", 12, Long.BYTES),
+    TAG_SHORT_ARRAY(ShortArrayTag.class, "TAG_Short_Array", 100, Short.BYTES);
     private static final Map<Class<? extends Tag<?>>, TagType> BY_CLASS = new HashMap<Class<? extends Tag<?>>, TagType>();
     private static final Map<String, TagType> BY_NAME = new HashMap<String, TagType>();
     private static final TagType[] BY_ID;
@@ -58,11 +58,13 @@ public enum TagType {
     private final Class<? extends Tag<?>> tagClass;
     private final String typeName;
     private final int id;
+    private final int bytes;
 
-    private TagType(Class<? extends Tag<?>> tagClass, String typeName, int id) {
+    private TagType(Class<? extends Tag<?>> tagClass, String typeName, int id, int bytes) {
         this.tagClass = tagClass;
         this.typeName = typeName;
         this.id = id;
+        this.bytes = bytes;
         // Such a hack, shame that Java makes this such a pain
         if (this.id > BaseData.maxId) {
             BaseData.maxId = this.id;
@@ -79,6 +81,14 @@ public enum TagType {
 
     public int getId() {
         return id;
+    }
+    
+	/**
+	 * Return the size of the tag's payload in bytes. If this tag type is an array, it will return the payload size of its child type instead.
+	 * In all other cases, where the payload size may vary, this will return {@code -1}.
+	 */
+    public int getSize() {
+    	return bytes;
     }
 
     public static TagType getByTagClass(Class<? extends Tag<?>> clazz) {

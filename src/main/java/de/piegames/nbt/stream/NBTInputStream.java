@@ -63,6 +63,7 @@ public final class NBTInputStream implements Closeable {
 
 	private final DataInput		dataIn;
 	private final InputStream	inputStream;
+	private boolean rawArrays = true;
 
 	/**
 	 * Creates a new {@link NBTInputStream}, which will source its data from the specified input stream. This assumes the stream is compressed.
@@ -93,6 +94,24 @@ public final class NBTInputStream implements Closeable {
 	}
 
 	/**
+	 * Creates a new {@link NBTInputStream}, which will source its data from the specified input stream. The stream may be wrapped into a
+	 * decompressing input stream depending on the chosen compression method. This assumes the stream uses big endian encoding.
+	 *
+	 * @param is
+	 *            The input stream.
+	 * @param compression
+	 *            The compression algorithm used for the input stream. Must be {@link #NO_COMPRESSION}, {@link #GZIP_COMPRESSION} or
+	 *            {@link #ZLIB_COMPRESSION}.
+	 * @param rawArrays
+	 *            Enabling this will parse all array types as {@link ByteArrayTag} to reduce overhead.
+	 * @throws java.io.IOException
+	 *             if an I/O error occurs.
+	 */
+	public NBTInputStream(InputStream is, int compression, boolean rawArrays) throws IOException {
+		this(is, compression, rawArrays, ByteOrder.BIG_ENDIAN);
+	}
+
+	/**
 	 * Creates a new {@link NBTInputStream}, which sources its data from the specified input stream. The stream may be wrapped into a
 	 * decompressing input stream depending on the chosen compression method.
 	 *
@@ -107,6 +126,26 @@ public final class NBTInputStream implements Closeable {
 	 *             if an I/O error occurs.
 	 */
 	public NBTInputStream(InputStream is, int compression, ByteOrder endianness) throws IOException {
+		this(is, compression, false, endianness);
+	}
+
+	/**
+	 * Creates a new {@link NBTInputStream}, which sources its data from the specified input stream. The stream may be wrapped into a
+	 * decompressing input stream depending on the chosen compression method.
+	 *
+	 * @param is
+	 *            The input stream.
+	 * @param compression
+	 *            The compression algorithm used for the input stream. Must be {@link #NO_COMPRESSION}, {@link #GZIP_COMPRESSION} or
+	 *            {@link #ZLIB_COMPRESSION}.
+	 * @param rawArrays
+	 *            Enabling this will parse all array types as {@link ByteArrayTag} to reduce overhead.
+	 * @param endianness
+	 *            Whether to read numbers from the InputStream with little endian encoding.
+	 * @throws java.io.IOException
+	 *             if an I/O error occurs.
+	 */
+	public NBTInputStream(InputStream is, int compression, boolean rawArrays, ByteOrder endianness) throws IOException {
 		switch (compression) {
 		case NO_COMPRESSION:
 			break;
@@ -123,6 +162,7 @@ public final class NBTInputStream implements Closeable {
 			this.inputStream = (InputStream) (this.dataIn = new LittleEndianInputStream(is));
 		else
 			this.inputStream = (InputStream) (this.dataIn = new DataInputStream(is));
+		this.rawArrays = rawArrays;
 	}
 
 	/**
@@ -200,18 +240,12 @@ public final class NBTInputStream implements Closeable {
 		case TAG_DOUBLE:
 			return new DoubleTag(name, dataIn.readDouble());
 
-		case TAG_BYTE_ARRAY:
-			int length = dataIn.readInt();
-			byte[] bytes = new byte[length];
-			dataIn.readFully(bytes);
-			return new ByteArrayTag(name, bytes);
-
 		case TAG_STRING:
 			return new StringTag(name, dataIn.readUTF());
 
-		case TAG_LIST:
+		case TAG_LIST: {
 			TagType childType = TagType.getById(dataIn.readByte());
-			length = dataIn.readInt();
+			int length = dataIn.readInt();
 
 			Class<? extends Tag> clazz = childType.getTagClass();
 			List<Tag> tagList = new ArrayList<Tag>(length);
@@ -226,7 +260,7 @@ public final class NBTInputStream implements Closeable {
 			}
 
 			return new ListTag(name, childType, tagList);
-
+		}
 		case TAG_COMPOUND:
 			CompoundMap compoundTagList = new CompoundMap();
 			while (true) {
@@ -240,29 +274,39 @@ public final class NBTInputStream implements Closeable {
 
 			return new CompoundTag(name, compoundTagList);
 
+			/* Array types. Warning: fall-through! */
 		case TAG_INT_ARRAY:
-			length = dataIn.readInt();
-			int[] ints = new int[length];
-			for (int i = 0; i < length; i++) {
-				ints[i] = dataIn.readInt();
+			if (!rawArrays) {
+				int length = dataIn.readInt();
+				int[] ints = new int[length];
+				for (int i = 0; i < length; i++) {
+					ints[i] = dataIn.readInt();
+				}
+				return new IntArrayTag(name, ints);
 			}
-			return new IntArrayTag(name, ints);
-
 		case TAG_LONG_ARRAY:
-			length = dataIn.readInt();
-			long[] longs = new long[length];
-			for (int i = 0; i < length; i++) {
-				longs[i] = dataIn.readLong();
+			if (!rawArrays) {
+				int length = dataIn.readInt();
+				long[] longs = new long[length];
+				for (int i = 0; i < length; i++) {
+					longs[i] = dataIn.readLong();
+				}
+				return new LongArrayTag(name, longs);
 			}
-			return new LongArrayTag(name, longs);
-
 		case TAG_SHORT_ARRAY:
-			length = dataIn.readInt();
-			short[] shorts = new short[length];
-			for (int i = 0; i < length; i++) {
-				shorts[i] = dataIn.readShort();
+			if (!rawArrays) {
+				int length = dataIn.readInt();
+				short[] shorts = new short[length];
+				for (int i = 0; i < length; i++) {
+					shorts[i] = dataIn.readShort();
+				}
+				return new ShortArrayTag(name, shorts);
 			}
-			return new ShortArrayTag(name, shorts);
+		case TAG_BYTE_ARRAY:
+			int length = dataIn.readInt() * type.getSize();
+			byte[] bytes = new byte[length];
+			dataIn.readFully(bytes);
+			return new ByteArrayTag(name, bytes);
 
 		default:
 			throw new IOException("Invalid tag type: " + type + ".");
