@@ -63,7 +63,7 @@ public final class NBTInputStream implements Closeable {
 
 	private final DataInput		dataIn;
 	private final InputStream	inputStream;
-	private boolean rawArrays = true;
+	private boolean				rawArrays			= true;
 
 	/**
 	 * Creates a new {@link NBTInputStream}, which will source its data from the specified input stream. This assumes the stream is compressed.
@@ -200,19 +200,21 @@ public final class NBTInputStream implements Closeable {
 	}
 
 	/**
-	 * Reads the payload of a {@link Tag}, given the name and type.
+	 * Reads the payload of a {@link Tag}, given the name and type. This will always return a tag of the type {@link TagType#getTagClass()}.
+	 * <b>Except:</b> when {@link #rawArrays} is set to {@code true}, this will transform all array types into {@link ByteArrayTag} and lists of
+	 * arrays to lists of {@link ByteArrayTag}.
 	 *
 	 * @param type
-	 *            The type.
+	 *            The type of the tag to be parsed.
 	 * @param name
-	 *            The name.
+	 *            The name to give to the resulting {@link Tag} object. May be empty (For end tags and in list tags).
 	 * @param depth
-	 *            The depth.
-	 * @return The tag.
+	 *            The current depth in the call stack
+	 * @return A {@link Tag} constructed with the read data
 	 * @throws java.io.IOException
 	 *             if an I/O error occurs.
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes", "fallthrough" })
 	private Tag readTagPayload(TagType type, String name, int depth) throws IOException {
 		switch (type) {
 		case TAG_END:
@@ -246,18 +248,18 @@ public final class NBTInputStream implements Closeable {
 		case TAG_LIST: {
 			TagType childType = TagType.getById(dataIn.readByte());
 			int length = dataIn.readInt();
+			if (childType == TagType.TAG_END && length > 0)
+				throw new IOException("TAG_End not permitted in a list.");
 
-			Class<? extends Tag> clazz = childType.getTagClass();
 			List<Tag> tagList = new ArrayList<Tag>(length);
-			for (int i = 0; i < length; i++) {
-				Tag tag = readTagPayload(childType, "", depth + 1);
-				if (tag instanceof EndTag) {
-					throw new IOException("TAG_End not permitted in a list.");
-				} else if (!clazz.isInstance(tag)) {
-					throw new IOException("Mixed tag types within a list.");
-				}
-				tagList.add(tag);
-			}
+			for (int i = 0; i < length; i++)
+				tagList.add(readTagPayload(childType, "", depth + 1));
+
+			if (rawArrays &&
+					(childType == TagType.TAG_SHORT_ARRAY
+							|| childType == TagType.TAG_INT_ARRAY
+							|| childType == TagType.TAG_LONG_ARRAY))
+				childType = TagType.TAG_BYTE_ARRAY;
 
 			return new ListTag(name, childType, tagList);
 		}
@@ -274,7 +276,7 @@ public final class NBTInputStream implements Closeable {
 
 			return new CompoundTag(name, compoundTagList);
 
-			/* Array types. Warning: fall-through! */
+		/* Array types. Warning: fall-through! */
 		case TAG_INT_ARRAY:
 			if (!rawArrays) {
 				int length = dataIn.readInt();

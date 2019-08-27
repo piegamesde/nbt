@@ -124,11 +124,11 @@ public class Chunk {
 		this.z = z;
 		this.timestamp = timestamp;
 
-		try (ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
-				NBTOutputStream out = new NBTOutputStream(baos, compression)) {
-			out.writeTag(data);
-			out.flush();
-			out.close();
+		try (ByteArrayOutputStream baos = new ByteArrayOutputStream(4096)) {
+			try (NBTOutputStream out = new NBTOutputStream(baos, compression)) {
+				out.writeTag(data);
+				out.flush();
+			}
 
 			byte[] bytes = baos.toByteArray();
 			int sectionLength = (bytes.length + 5) / 4096 + 1;
