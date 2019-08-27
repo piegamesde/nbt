@@ -36,8 +36,9 @@ public enum TagType {
     TAG_DOUBLE(DoubleTag.class, "TAG_Double", 6, Double.BYTES),
     TAG_BYTE_ARRAY(ByteArrayTag.class, "TAG_Byte_Array", 7, Byte.BYTES),
     TAG_STRING(StringTag.class, "TAG_String", 8, -1),
-    TAG_LIST((Class) ListTag.class, "TAG_List", 9, -1),
     // Java generics, y u so suck
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	TAG_LIST((Class) ListTag.class, "TAG_List", 9, -1),
     TAG_COMPOUND(CompoundTag.class, "TAG_Compound", 10, -1),
     TAG_INT_ARRAY(IntArrayTag.class, "TAG_Int_Array", 11, Integer.BYTES),
     TAG_LONG_ARRAY(LongArrayTag.class, "TAG_Long_Array", 12, Long.BYTES),
@@ -59,7 +60,7 @@ public enum TagType {
     private final String typeName;
     private final int id;
     private final int bytes;
-
+    
     private TagType(Class<? extends Tag<?>> tagClass, String typeName, int id, int bytes) {
         this.tagClass = tagClass;
         this.typeName = typeName;

@@ -84,27 +84,39 @@ public final class ByteArrayTag extends Tag<byte[]> {
 	public ByteArrayTag clone() {
         byte[] clonedArray = cloneArray(value);
 
-        return new ByteArrayTag(getName(), clonedArray);
-    }
+		return new ByteArrayTag(getName(), clonedArray);
+	}
 
-    @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof ByteArrayTag)) {
-            return false;
-        }
-
-        ByteArrayTag tag = (ByteArrayTag) other;
-        return Arrays.equals(value, tag.value) && getName().equals(tag.getName());
-    }
-
-    private byte[] cloneArray(byte[] byteArray) {
-        if (byteArray == null) {
-            return null;
+	private byte[] cloneArray(byte[] byteArray) {
+		if (byteArray == null) {
+			return null;
         } else {
             int length = byteArray.length;
             byte[] newArray = new byte[length];
             System.arraycopy(byteArray, 0, newArray, 0, length);
-            return newArray;
-        }
-    }
+			return newArray;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Arrays.hashCode(value);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ByteArrayTag other = (ByteArrayTag) obj;
+		if (!Arrays.equals(value, other.value))
+			return false;
+		return true;
+	}
 }

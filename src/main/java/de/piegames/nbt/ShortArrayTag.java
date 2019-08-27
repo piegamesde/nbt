@@ -84,16 +84,6 @@ public class ShortArrayTag extends Tag<short[]> {
         return new ShortArrayTag(getName(), clonedArray);
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof ShortArrayTag)) {
-            return false;
-        }
-
-        ShortArrayTag tag = (ShortArrayTag) other;
-        return Arrays.equals(value, tag.value) && getName().equals(tag.getName());
-    }
-
     private short[] cloneArray(short[] shortArray) {
         if (shortArray == null) {
             return null;
@@ -104,4 +94,26 @@ public class ShortArrayTag extends Tag<short[]> {
             return shortArray;
         }
     }
+
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Arrays.hashCode(value);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ShortArrayTag other = (ShortArrayTag) obj;
+		if (!Arrays.equals(value, other.value))
+			return false;
+		return true;
+	}
 }

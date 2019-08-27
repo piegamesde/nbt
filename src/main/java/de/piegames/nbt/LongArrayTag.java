@@ -84,16 +84,6 @@ public class LongArrayTag extends Tag<long[]> {
         return new LongArrayTag(getName(), clonedArray);
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof LongArrayTag)) {
-            return false;
-        }
-
-        LongArrayTag tag = (LongArrayTag) other;
-        return Arrays.equals(value, tag.value) && getName().equals(tag.getName());
-    }
-
     private long[] cloneArray(long[] longArray) {
         if (longArray == null) {
             return null;
@@ -104,4 +94,26 @@ public class LongArrayTag extends Tag<long[]> {
             return longArray;
         }
     }
+
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Arrays.hashCode(value);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LongArrayTag other = (LongArrayTag) obj;
+		if (!Arrays.equals(value, other.value))
+			return false;
+		return true;
+	}
 }

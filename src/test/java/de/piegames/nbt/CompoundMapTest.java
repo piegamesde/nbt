@@ -23,6 +23,9 @@
  */
 package de.piegames.nbt;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -31,13 +34,6 @@ import java.util.Random;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import de.piegames.nbt.CompoundMap;
-import de.piegames.nbt.LongTag;
-import de.piegames.nbt.Tag;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class CompoundMapTest {
     List<Tag<?>> sorted;
@@ -71,7 +67,7 @@ public class CompoundMapTest {
     private void printList(String type, List<Tag<?>> list) {
         StringBuilder sb = new StringBuilder();
         sb.append("List: " + type + "\n");
-        for (Tag t : list) {
+        for (Tag<?> t : list) {
             sb.append(t.getName() + "\n");
         }
         System.out.println(sb.toString());
@@ -85,7 +81,7 @@ public class CompoundMapTest {
 
         tag = new CompoundMap(false, false);
 
-        for (Tag t : random) {
+        for (Tag<?> t : random) {
             tag.put(t);
         }
 
@@ -100,7 +96,7 @@ public class CompoundMapTest {
 
         tag = new CompoundMap(true, false);
 
-        for (Tag t : random) {
+        for (Tag<?> t : random) {
             tag.put(t);
         }
 
@@ -115,7 +111,7 @@ public class CompoundMapTest {
 
         tag = new CompoundMap(true, true);
 
-        for (Tag t : random) {
+        for (Tag<?> t : random) {
             tag.put(t);
         }
 
@@ -126,8 +122,8 @@ public class CompoundMapTest {
         Iterator<Tag<?>> iterA = a.iterator();
         Iterator<Tag<?>> iterB = b.iterator();
         while (iterA.hasNext() && iterB.hasNext()) {
-            Tag currentA = iterA.next();
-            Tag currentB = iterB.next();
+            Tag<?> currentA = iterA.next();
+            Tag<?> currentB = iterB.next();
             assertTrue(message, currentA.equals(currentB));
         }
         assertFalse("Maps had different lengths", iterA.hasNext() || iterB.hasNext());

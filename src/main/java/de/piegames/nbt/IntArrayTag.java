@@ -85,14 +85,26 @@ public class IntArrayTag extends Tag<int[]> {
     }
 
     @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof IntArrayTag)) {
-            return false;
-        }
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Arrays.hashCode(value);
+		return result;
+	}
 
-        IntArrayTag tag = (IntArrayTag) other;
-        return Arrays.equals(value, tag.value) && getName().equals(tag.getName());
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		IntArrayTag other = (IntArrayTag) obj;
+		if (!Arrays.equals(value, other.value))
+			return false;
+		return true;
+	}
 
     private int[] cloneArray(int[] intArray) {
         if (intArray == null) {
