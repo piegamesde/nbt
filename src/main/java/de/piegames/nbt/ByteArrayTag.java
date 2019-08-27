@@ -23,66 +23,131 @@
  */
 package de.piegames.nbt;
 
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
+import java.nio.ShortBuffer;
 import java.util.Arrays;
 import java.util.Optional;
+
+import de.piegames.nbt.stream.NBTInputStream;
 
 /**
  * The {@code TAG_Byte_Array} tag.
  */
 public final class ByteArrayTag extends Tag<byte[]> {
-    /**
-     * The value.
-     */
-    private byte[] value;
+	/**
+	 * The value.
+	 */
+	private byte[] value;
 
-    /**
-     * Creates the tag.
-     *
-     * @param name The name.
-     * @param value The value.
-     */
-    public ByteArrayTag(String name, byte[] value) {
-        super(TagType.TAG_BYTE_ARRAY, name);
-        this.value = value;
-    }
+	/**
+	 * Creates the tag.
+	 *
+	 * @param name
+	 *            The name.
+	 * @param value
+	 *            The value.
+	 */
+	public ByteArrayTag(String name, byte[] value) {
+		super(TagType.TAG_BYTE_ARRAY, name);
+		this.value = value;
+	}
 
-    @Override
-    public byte[] getValue() {
-        return value;
-    }
+	@Override
+	public byte[] getValue() {
+		return value;
+	}
 
-    @Override
-    public void setValue(byte[] value) {
-        this.value = value;
-    }
+	@Override
+	public void setValue(byte[] value) {
+		this.value = value;
+	}
+
+	/**
+	 * Interpret the value of this tag as `short[]`. Useful to deal with data read with {@link NBTInputStream#rawArrays} set. This will do a full
+	 * conversion each time, so be sure to cache the result if required.
+	 * <p/>
+	 * <b>Warning:</b> this won't deal with byte order. Implement your own and use {@link ByteBuffer#order(java.nio.ByteOrder)} to change it if
+	 * you have non-standard data. This won't deal with data length as well. Make sure the data size is an appropriate multiple.
+	 */
+	public short[] getShortArrayValue() {
+		ShortBuffer buffer = ByteBuffer.wrap(value).asShortBuffer();
+		short[] array = new short[buffer.remaining()];
+		buffer.get(array);
+		return array;
+	}
+
+	/**
+	 * Interpret the value of this tag as `int[]`. Useful to deal with data read with {@link NBTInputStream#rawArrays} set. This will do a full
+	 * conversion each time, so be sure to cache the result if required.
+	 * <p/>
+	 * <b>Warning:</b> this won't deal with byte order. Implement your own and use {@link ByteBuffer#order(java.nio.ByteOrder)} to change it if
+	 * you have non-standard data. This won't deal with data length as well. Make sure the data size is an appropriate multiple.
+	 */
+	public int[] getIntArrayValue() {
+		IntBuffer buffer = ByteBuffer.wrap(value).asIntBuffer();
+		int[] array = new int[buffer.remaining()];
+		buffer.get(array);
+		return array;
+	}
+
+	/**
+	 * Interpret the value of this tag as `long[]`. Useful to deal with data read with {@link NBTInputStream#rawArrays} set. This will do a full
+	 * conversion each time, so be sure to cache the result if required.
+	 * <p/>
+	 * <b>Warning:</b> this won't deal with byte order. Implement your own and use {@link ByteBuffer#order(java.nio.ByteOrder)} to change it if
+	 * you have non-standard data. This won't deal with data length as well. Make sure the data size is an appropriate multiple.
+	 */
+	public long[] getLongArrayValue() {
+		LongBuffer buffer = ByteBuffer.wrap(value).asLongBuffer();
+		long[] array = new long[buffer.remaining()];
+		buffer.get(array);
+		return array;
+	}
 
 	@Override
 	public Optional<ByteArrayTag> getAsByteArrayTag() {
 		return Optional.of(this);
 	}
+	
+	@Override
+	public Optional<IntArrayTag> getAsIntArrayTag() {
+		return Optional.of(new IntArrayTag(getName(), getIntArrayValue()));
+	}
 
 	@Override
-    public String toString() {
-        StringBuilder hex = new StringBuilder();
-        for (byte b : value) {
-            String hexDigits = Integer.toHexString(b).toUpperCase();
-            if (hexDigits.length() == 1) {
-                hex.append("0");
-            }
-            hex.append(hexDigits).append(" ");
-        }
+	public Optional<LongArrayTag> getAsLongArrayTag() {
+		return Optional.of(new LongArrayTag(getName(), getLongArrayValue()));
+	}
+	
+	@Override
+	public Optional<ShortArrayTag> getAsShortArrayTag() {
+		return Optional.of(new ShortArrayTag(getName(), getShortArrayValue()));
+	}
 
-        String name = getName();
-        String append = "";
-        if (name != null && !name.equals("")) {
-            append = "(\"" + this.getName() + "\")";
-        }
-        return "TAG_Byte_Array" + append + ": " + hex.toString();
-    }
+	@Override
+	public String toString() {
+		StringBuilder hex = new StringBuilder();
+		for (byte b : value) {
+			String hexDigits = Integer.toHexString(b).toUpperCase();
+			if (hexDigits.length() == 1) {
+				hex.append("0");
+			}
+			hex.append(hexDigits).append(" ");
+		}
 
-    @Override
+		String name = getName();
+		String append = "";
+		if (name != null && !name.equals("")) {
+			append = "(\"" + this.getName() + "\")";
+		}
+		return "TAG_Byte_Array" + append + ": " + hex.toString();
+	}
+
+	@Override
 	public ByteArrayTag clone() {
-        byte[] clonedArray = cloneArray(value);
+		byte[] clonedArray = cloneArray(value);
 
 		return new ByteArrayTag(getName(), clonedArray);
 	}
@@ -90,10 +155,10 @@ public final class ByteArrayTag extends Tag<byte[]> {
 	private byte[] cloneArray(byte[] byteArray) {
 		if (byteArray == null) {
 			return null;
-        } else {
-            int length = byteArray.length;
-            byte[] newArray = new byte[length];
-            System.arraycopy(byteArray, 0, newArray, 0, length);
+		} else {
+			int length = byteArray.length;
+			byte[] newArray = new byte[length];
+			System.arraycopy(byteArray, 0, newArray, 0, length);
 			return newArray;
 		}
 	}

@@ -117,6 +117,7 @@ public abstract class Tag<T> implements Comparable<Tag<?>> {
 		return Optional.empty();
 	}
 
+	/** Cast this {@code Tag} to a {@link ByteArrayTag} if possible, or return an empty {@link Optional} otherwise. */
 	public Optional<ByteArrayTag> getAsByteArrayTag() {
 		return Optional.empty();
 	}
@@ -133,14 +134,32 @@ public abstract class Tag<T> implements Comparable<Tag<?>> {
 		return Optional.empty();
 	}
 
+	/**
+	 * Cast this {@code Tag} to a {@link IntArrayTag} if possible, or return an empty {@link Optional} otherwise. Note that
+	 * {@link ByteArrayTag}s will be automatically converted using {@link ByteArrayTag#getIntArrayValue()}. See the respective warnings there.
+	 * 
+	 * @see ByteArrayTag#getIntArrayValue()
+	 */
 	public Optional<IntArrayTag> getAsIntArrayTag() {
 		return Optional.empty();
 	}
 
+	/**
+	 * Cast this {@code Tag} to a {@link LongArrayTag} if possible, or return an empty {@link Optional} otherwise. Note that
+	 * {@link ByteArrayTag}s will be automatically converted using {@link ByteArrayTag#getLongArrayValue()}. See the respective warnings there.
+	 * 
+	 * @see ByteArrayTag#getLongArrayValue()
+	 */
 	public Optional<LongArrayTag> getAsLongArrayTag() {
 		return Optional.empty();
 	}
 
+	/**
+	 * Cast this {@code Tag} to a {@link ShortArrayTag} if possible, or return an empty {@link Optional} otherwise. Note that
+	 * {@link ByteArrayTag}s will be automatically converted using {@link ByteArrayTag#getShortArrayValue()}. See the respective warnings there.
+	 * 
+	 * @see ByteArrayTag#getShortArrayValue()
+	 */
 	public Optional<ShortArrayTag> getAsShortArrayTag() {
 		return Optional.empty();
 	}
