@@ -1,7 +1,10 @@
-// Apply plugins
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'eclipse'
+plugins {
+    id 'java'
+    id 'maven'
+    id 'eclipse'
+	id "me.champeau.gradle.jmh" version "0.5.0-rc-2"
+    id 'com.github.johnrengelman.shadow' version "5.1.0"
+}
 
 // Project information
 ext.projectName = 'NBT'
@@ -13,14 +16,6 @@ ext.inceptionYear = '2011'
 ext.url = 'https://github.com/piegamesde/nbt/'
 ext.description = 'Named Binary Tag (NBT) library for Java'
 
-// Build plugin repositories and dependencies
-buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-    }
-}
-
 // Project repositories
 repositories {
     mavenLocal()
@@ -30,6 +25,8 @@ repositories {
 // Project dependencies
 dependencies {
     testCompile 'junit:junit:4.12'
+    jmh group: 'org.openjdk.jmh', name: 'jmh-core', version: '1.12'
+    jmh group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: '1.12'
 }
 
 // Filter, process, and include resources
@@ -63,4 +60,25 @@ if (JavaVersion.current().isJava8Compatible()) {
             options.addStringOption('Xdoclint:none', '-quiet')
         }
     }
+}
+
+jmh {
+   iterations = 4 // Number of measurement iterations to do.
+   benchmarkMode = ['thrpt'] // Benchmark mode. Available modes are: [Throughput/thrpt, AverageTime/avgt, SampleTime/sample, SingleShotTime/ss, All/all]
+   batchSize = 1 // Batch size: number of benchmark method calls per operation. (some benchmark modes can ignore this setting)
+   fork = 2 // How many times to forks a single benchmark. Use 0 to disable forking altogether
+   failOnError = false // Should JMH fail immediately if any benchmark had experienced the unrecoverable error?
+   forceGC = false // Should JMH force GC between iterations?
+   timeOnIteration = '5s' // Time to spend at each measurement iteration.
+   resultFormat = 'CSV' // Result format type (one of CSV, JSON, NONE, SCSV, TEXT)
+   threads = 2 // Number of worker threads to run with.
+   timeout = '60s' // Timeout for benchmark iteration.
+   timeUnit = 'ms' // Output time unit. Available time units are: [m, s, ms, us, ns].
+   verbosity = 'NORMAL' // Verbosity mode. Available modes are: [SILENT, NORMAL, EXTRA]
+   warmup = '10s' // Time to spend at each warmup iteration.
+   warmupBatchSize = 1 // Warmup batch size: number of benchmark method calls per operation.
+   warmupForks = 0 // How many warmup forks to make for a single benchmark. 0 to disable warmup forks.
+   warmupIterations = 4 // Number of warmup iterations to do.
+
+   duplicateClassesStrategy = 'fail' // Strategy to apply when encountring duplicate classes during creation of the fat jar (i.e. while executing jmhJar task)
 }
