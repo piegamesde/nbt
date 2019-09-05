@@ -1,5 +1,6 @@
 package de.piegames.nbt;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import java.nio.ByteBuffer;
@@ -10,12 +11,13 @@ import java.util.Random;
 import org.junit.Test;
 
 import de.piegames.nbt.regionfile.Chunk;
+import de.piegames.nbt.regionfile.Palette;
 
 public class LongTest {
 
 	@Test
-	public void test() {
-		for (int BITS = 4; BITS <= 12; BITS++) {
+	public void testLong() {
+		for (int BITS = 1; BITS <= 63; BITS++) {
 			Random random = new Random(1234);
 
 			// Fill a byte buffer with random data
@@ -40,6 +42,39 @@ public class LongTest {
 				assertEquals(Long.parseLong(new StringBuilder(number.substring(i * BITS, i * BITS + BITS)).reverse().toString(), 2),
 						Chunk.extractFromLong(longData, i, BITS));
 			}
+		}
+	}
+	
+	@Test
+	public void testPalette() {
+		for (int BITS = 1; BITS <= 128; BITS++) {
+			Random random = new Random(1234);
+
+			// Fill a byte buffer with random data
+			ByteBuffer buffer = ByteBuffer.wrap(new byte[BITS * 64 * 8]);
+			buffer.order(ByteOrder.BIG_ENDIAN);
+			random.nextBytes(buffer.array());
+
+			// Convert it to a long buffer
+			LongBuffer data = buffer.asLongBuffer();
+			data.rewind();
+			long[] longData = new long[BITS * 64];
+			data.get(longData);
+
+			int[] controlData = new int[4096];
+			int[] realData = new int[4096];
+			Palette palette = new Palette(longData);
+			
+			for (int i = 0; i < 4096; i++) {
+				controlData[i] = (int) Chunk.extractFromLong(longData, i, BITS);
+//				realData[i] = (int) palette.next();
+			}
+			
+			for (int i = 0; i < 4096;)
+				for (long d : palette.output)
+					realData[i++] = (int) d;
+			
+			assertArrayEquals(controlData, realData);
 		}
 	}
 

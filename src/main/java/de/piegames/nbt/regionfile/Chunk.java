@@ -227,30 +227,28 @@ public class Chunk {
 	 *            The amount of bits each index has. This is to avoid redundant calculation on each call.
 	 *
 	 * @see #bitsPerIndex(long[])
+	 * @see Palette If this method pops up in your profiler results, the Palette class does the same thing but in faster.
 	 * @author piegames
 	 */
 	public static long extractFromLong(long[] blocks, int i, int bitsPerIndex) {
-		int startByte = (bitsPerIndex * i) >> 6; // >> 6 equals / 64
-		int endByte = (bitsPerIndex * (i + 1)) >> 6;
-		// The bit within the long where our value starts. Counting from the right LSB (!).
-		int startByteBit = ((bitsPerIndex * i)) & 63; // % 64 equals & 63
-		int endByteBit = ((bitsPerIndex * (i + 1))) & 63;
-
-		// Use bit shifting and & bit masking to extract bit sequences out of longs as numbers
-		// -1L is the value with every bit set
-		long blockIndex;
-		if (startByte == endByte) {
-			// Normal case: the bit string we need is within a single long
-			blockIndex = (blocks[startByte] << (64 - endByteBit)) >>> (64 + startByteBit - endByteBit);
-		} else if (endByteBit == 0) {
-			// The bit string is exactly at the beginning of a long
-			blockIndex = blocks[startByte] >>> startByteBit;
-		} else {
-			// The bit string is overlapping two longs
-			blockIndex = ((blocks[startByte] >>> startByteBit))
-					| ((blocks[endByte] << (64 - endByteBit)) >>> (startByteBit - endByteBit));
-		}
-		return blockIndex;
+		/* Bit shifts and logical ands are faster division and modulo on power of two numbers */
+		
+		/* The bit within the long where our value starts. Counting from the right LSB (!). */
+		int startByteBit = (bitsPerIndex * i) & 63;
+		/* The first long containing the desired value */
+		int startIndex = (bitsPerIndex * i) >> 6;
+		/* The last long containing the desired value. -1 to make the range inclusive */
+		int endIndex = ((bitsPerIndex * (i + 1)) - 1) >> 6;
+		/* Use bit shifting and & bit masking to extract bit sequences out of longs as numbers */
+		/* Technically, we could pass this one as parameter too like bitsPerIndex, but backwards compatibility */
+		long bitMask = 0xFFFFFFFFFFFFFFFFL >>> (64 - bitsPerIndex);
+		
+		if (startIndex == endIndex)
+			/* Shortcut: Only evaluate one long if the desired value is not split across values. */
+			return((blocks[startIndex] >>> startByteBit) & bitMask);
+		else
+			return(((blocks[startIndex] >>> startByteBit)
+					| (blocks[endIndex] << (64 - startByteBit))) & bitMask);
 	}
 
 	/** Incubating utility method, use with care */
