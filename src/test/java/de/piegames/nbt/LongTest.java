@@ -11,12 +11,12 @@ import java.util.Random;
 import org.junit.Test;
 
 import de.piegames.nbt.regionfile.Chunk;
-import de.piegames.nbt.regionfile.Palette;
+import de.piegames.nbt.regionfile.Palette1_13;
 
 public class LongTest {
 
 	@Test
-	public void testLong() {
+	public void testLong1_13() {
 		for (int BITS = 1; BITS <= 63; BITS++) {
 			Random random = new Random(1234);
 
@@ -40,13 +40,13 @@ public class LongTest {
 			for (int i = 0; i < BITS * 64; i++) {
 				// Compare conversion with control data
 				assertEquals(Long.parseLong(new StringBuilder(number.substring(i * BITS, i * BITS + BITS)).reverse().toString(), 2),
-						Chunk.extractFromLong(longData, i, BITS));
+						Chunk.extractFromLong1_13(longData, i, BITS));
 			}
 		}
 	}
 	
 	@Test
-	public void testPalette() {
+	public void testPalette1_13() {
 		for (int BITS = 1; BITS <= 128; BITS++) {
 			Random random = new Random(1234);
 
@@ -63,15 +63,15 @@ public class LongTest {
 
 			int[] controlData = new int[4096];
 			int[] realData = new int[4096];
-			Palette palette = new Palette(longData);
+			Palette1_13 palette = new Palette1_13(longData);
 			
 			for (int i = 0; i < 4096; i++) {
-				controlData[i] = (int) Chunk.extractFromLong(longData, i, BITS);
+				controlData[i] = (int) Chunk.extractFromLong1_13(longData, i, BITS);
 //				realData[i] = (int) palette.next();
 			}
 			
 			for (int i = 0; i < 4096;)
-				for (long d : palette.output)
+				for (long d : palette.next64())
 					realData[i++] = (int) d;
 			
 			assertArrayEquals(controlData, realData);

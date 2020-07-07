@@ -216,6 +216,16 @@ public class Chunk {
 	}
 
 	/**
+	 * @deprecated Renamed to {@link #extractFromLong1_13(long[], int, int)}.
+	 * @see #extractFromLong1_13(long[], int, int)
+	 * @see #extractFromLong1_16(long[])
+	 */
+	@Deprecated
+	public static long extractFromLong(long[] blocks, int i, int bitsPerIndex) {
+		return extractFromLong1_13(blocks, i, bitsPerIndex);
+	}
+
+	/**
 	 * Extract a palette index from the long array. This data is located at {@code /Level/Sections[i]/BlockStates}.
 	 *
 	 * @param blocks
@@ -227,10 +237,11 @@ public class Chunk {
 	 *            The amount of bits each index has. This is to avoid redundant calculation on each call.
 	 *
 	 * @see #bitsPerIndex(long[])
-	 * @see Palette If this method pops up in your profiler results, the Palette class does the same thing but in faster.
+	 * @see Palette1_13 {@code Palette1_13} If this method pops up in your profiler results, the Palette class does the same thing but in faster.
+	 * @see #extractFromLong1_16(long[],int) {@code extractFromLong1_16} for newer Minecraft versions
 	 * @author piegames
 	 */
-	public static long extractFromLong(long[] blocks, int i, int bitsPerIndex) {
+	public static long extractFromLong1_13(long[] blocks, int i, int bitsPerIndex) {
 		/* Bit shifts and logical ands are faster division and modulo on power of two numbers */
 		
 		/* The bit within the long where our value starts. Counting from the right LSB (!). */
@@ -249,6 +260,178 @@ public class Chunk {
 		else
 			return(((blocks[startIndex] >>> startByteBit)
 					| (blocks[endIndex] << (64 - startByteBit))) & bitMask);
+	}
+
+
+	/**
+	 * Convert a packed palette to actual indices. This data is located at {@code /Level/Sections[i]/BlockStates}.
+	 *
+	 * @param blocks
+	 *            a long array containing all the block states as Minecraft encodes them to {@code /Level/Sections[i]/BlockStates} within each
+	 *            section of a chunk.
+	 * @param paletteSize
+	 *            The number of entries in the palette used to encode these blocks
+	 *
+	 * @see #extractFromLong1_13(long[],int,int) {@code extractFromLong1_13} for older Minecraft versions
+	 * @author piegames
+	 */
+	@SuppressWarnings("fallthrough")
+	public static long[] extractFromLong1_16(long[] blocks, int paletteSize) {
+		int bitsPerIndex = Math.max(4, Integer.SIZE - Integer.numberOfLeadingZeros(paletteSize - 1));
+		int shortsPerLong = Math.floorDiv(64, bitsPerIndex);
+		int mask = (1 << bitsPerIndex) - 1;
+
+		long[] result = new long[4096];
+
+		/* Special case the most common packing sizes */
+		if (bitsPerIndex == 4) {
+			int index = 0;
+			for (long l : blocks) {
+				// Bit 64 ............................................................... Bit 0
+				// ┌──┐┌──┐ ┌──┐┌──┐ ┌──┐┌──┐ ┌──┐┌──┐ ┌──┐┌──┐ ┌──┐┌──┐ ┌──┐┌──┐ ┌──┐┌──┐ (from right to left)
+				// xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx
+				result[index++] = (l >> 0x00) & 0xF;
+				result[index++] = (l >> 0x04) & 0xF;
+				result[index++] = (l >> 0x08) & 0xF;
+				result[index++] = (l >> 0x0C) & 0xF;
+				result[index++] = (l >> 0x10) & 0xF;
+				result[index++] = (l >> 0x14) & 0xF;
+				result[index++] = (l >> 0x18) & 0xF;
+				result[index++] = (l >> 0x1C) & 0xF;
+				result[index++] = (l >> 0x20) & 0xF;
+				result[index++] = (l >> 0x24) & 0xF;
+				result[index++] = (l >> 0x28) & 0xF;
+				result[index++] = (l >> 0x2C) & 0xF;
+				result[index++] = (l >> 0x30) & 0xF;
+				result[index++] = (l >> 0x34) & 0xF;
+				result[index++] = (l >> 0x38) & 0xF;
+				result[index++] = (l >> 0x3C) & 0xF;
+			}
+		} else if (bitsPerIndex == 5) {
+			int index = 0;
+			for (int i = 0; i < blocks.length - 1; i++) {
+				long l = blocks[i];
+				// Bit 64 ............................................................... Bit 0
+				// ....┌─── ┐┌───┐┌─ ──┐┌───┐ ┌───┐┌── ─┐┌───┐┌ ───┐┌─── ┐┌───┐┌─ ──┐┌───┐ (from right to left)
+				// xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx
+				result[index++] = (l >> 0) & 0x1F;
+				result[index++] = (l >> 5) & 0x1F;
+				result[index++] = (l >> 10) & 0x1F;
+				result[index++] = (l >> 15) & 0x1F;
+				result[index++] = (l >> 20) & 0x1F;
+				result[index++] = (l >> 25) & 0x1F;
+				result[index++] = (l >> 30) & 0x1F;
+				result[index++] = (l >> 35) & 0x1F;
+				result[index++] = (l >> 40) & 0x1F;
+				result[index++] = (l >> 45) & 0x1F;
+				result[index++] = (l >> 50) & 0x1F;
+				result[index++] = (l >> 55) & 0x1F;
+			}
+			{ /* Last iteration – almost Duff's device! */
+				long lastData = blocks[blocks.length - 1];
+				switch (result.length - index) {
+				case 10:
+					result[index++] = lastData & 0x1F;
+					lastData >>= 5;
+				case 9:
+					result[index++] = lastData & 0x1F;
+					lastData >>= 5;
+				case 8:
+					result[index++] = lastData & 0x1F;
+					lastData >>= 5;
+				case 7:
+					result[index++] = lastData & 0x1F;
+					lastData >>= 5;
+				case 6:
+					result[index++] = lastData & 0x1F;
+					lastData >>= 5;
+				case 5:
+					result[index++] = lastData & 0x1F;
+					lastData >>= 5;
+				case 4:
+					result[index++] = lastData & 0x1F;
+					lastData >>= 5;
+				case 3:
+					result[index++] = lastData & 0x1F;
+					lastData >>= 5;
+				case 2:
+					result[index++] = lastData & 0x1F;
+					lastData >>= 5;
+				case 1:
+					result[index++] = lastData & 0x1F;
+				case 0:
+					break;
+				default:
+					throw new InternalError();
+				}
+			}
+		} else if (bitsPerIndex == 6) {
+			int index = 0;
+			for (int i = 0; i < blocks.length - 1; i++) {
+				long l = blocks[i];
+				// Bit 64 ............................................................... Bit 0
+				// ....┌─── ─┐┌────┐ ┌────┐┌─ ───┐┌─── ─┐┌────┐ ┌────┐┌─ ───┐┌─── ─┐┌────┐ (from right to left)
+				// xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx
+				result[index++] = (l >> 0) & 0x3F;
+				result[index++] = (l >> 6) & 0x3F;
+				result[index++] = (l >> 12) & 0x3F;
+				result[index++] = (l >> 18) & 0x3F;
+				result[index++] = (l >> 24) & 0x3F;
+				result[index++] = (l >> 30) & 0x3F;
+				result[index++] = (l >> 36) & 0x3F;
+				result[index++] = (l >> 42) & 0x3F;
+				result[index++] = (l >> 48) & 0x3F;
+				result[index++] = (l >> 54) & 0x3F;
+			}
+			{ /* Last iteration – almost Duff's device! */
+				long lastData = blocks[blocks.length - 1];
+				switch (result.length - index) {
+				case 10:
+					result[index++] = lastData & 0x3F;
+					lastData >>= 6;
+				case 9:
+					result[index++] = lastData & 0x3F;
+					lastData >>= 6;
+				case 8:
+					result[index++] = lastData & 0x3F;
+					lastData >>= 6;
+				case 7:
+					result[index++] = lastData & 0x3F;
+					lastData >>= 6;
+				case 6:
+					result[index++] = lastData & 0x3F;
+					lastData >>= 6;
+				case 5:
+					result[index++] = lastData & 0x3F;
+					lastData >>= 6;
+				case 4:
+					result[index++] = lastData & 0x3F;
+					lastData >>= 6;
+				case 3:
+					result[index++] = lastData & 0x3F;
+					lastData >>= 6;
+				case 2:
+					result[index++] = lastData & 0x3F;
+					lastData >>= 6;
+				case 1:
+					result[index++] = lastData & 0x3F;
+				case 0:
+					break;
+				default:
+					throw new InternalError();
+				}
+			}
+		} else {
+			/* Fallback: general case (yes, the whole method could be this short) */
+			int index = 0;
+			for (long l : blocks) {
+				for (int s = 0; s < shortsPerLong && index < 4096; s++) {
+					result[index++] = l & mask;
+					l >>= bitsPerIndex;
+				}
+			}
+		}
+		return result;
 	}
 
 	/** Incubating utility method, use with care */
