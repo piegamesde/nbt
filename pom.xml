@@ -2,89 +2,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!-- Project information -->
-    <name>Flow NBT</name>
-    <groupId>com.flowpowered</groupId>
-    <artifactId>flow-nbt</artifactId>
-    <version>2.0.0</version>
+    <name>Piegames NBT</name>
+    <groupId>de.piegames</groupId>
+    <artifactId>piegames-nbt</artifactId>
+    <version>3.0.0</version>
     <packaging>jar</packaging>
     <inceptionYear>2011</inceptionYear>
-    <url>https://flowpowered.com/nbt</url>
-    <description>Named Binary Tag (NBT) library for Java based on Graham Edgecombe's JNBT library.</description>
-
-    <!-- Parent information -->
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>9</version>
-    </parent>
-
-    <!-- Build properties -->
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <buildNumber>0</buildNumber>
-        <ciSystem>unknown</ciSystem>
-        <commit>unknown</commit>
-        <additionalparam>-Xdoclint:none</additionalparam>
-        <mainClass>${project.groupId}.nbt.gui.NBTViewer</mainClass>
-    </properties>
-
-    <!-- License information -->
-    <licenses>
-        <license>
-            <name>MIT License</name>
-            <url>https://tldrlegal.com/l/mit</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <!-- Organization information -->
-    <organization>
-        <name>Flow Powered</name>
-        <url>https://flowpowered.com</url>
-    </organization>
-
-    <!-- Project developers -->
-    <developers>
-        <developer>
-            <id>DDoS</id>
-            <name>Aleksi Sapon</name>
-            <email>qctechs@gmail.com</email>
-        </developer>
-        <developer>
-            <id>kitskub</id>
-            <name>Jack Huey</name>
-            <email>kitskub@gmail.com</email>
-        </developer>
-        <developer>
-            <id>Wolf480pl</id>
-            <name>Wolf480pl</name>
-            <email>wolf480@interia.pl</email>
-        </developer>
-        <developer>
-            <id>lukespragg</id>
-            <name>Luke Spragg</name>
-            <email>the@wulf.im</email>
-        </developer>
-    </developers>
-
-    <!-- Source code access -->
-    <scm>
-        <connection>scm:git:git://github.com/flow/nbt.git</connection>
-        <developerConnection>scm:git:git@github.com:flow/nbt.git</developerConnection>
-        <url>https://github.com/flow/nbt</url>
-    </scm>
-
-    <!-- Continuous integration -->
-    <ciManagement>
-        <system>travis</system>
-        <url>https://travis-ci.org/flow/nbt</url>
-    </ciManagement>
-
-    <!-- Issue management -->
-    <issueManagement>
-        <system>github</system>
-        <url>https://github.com/flow/nbt/issues</url>
-    </issueManagement>
+    <url>https://github.com/piegamesde/nbt</url>
+    <description>Named Binary Tag (NBT) library for Java at the end of a longer fork chain.</description>
 
     <!-- Project dependencies -->
     <dependencies>
@@ -194,12 +119,6 @@
                     <author>false</author>
                     <version>false</version>
                 </configuration>
-            </plugin>
-            <!-- Coveralls reporting plugin  -->
-            <plugin>
-                <groupId>org.eluder.coveralls</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
-                <version>3.1.0</version>
             </plugin>
             <!-- Cobertura test coverage plugin -->
             <plugin>

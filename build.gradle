@@ -10,7 +10,7 @@ plugins {
 ext.projectName = 'NBT'
 group = 'de.piegames'
 archivesBaseName = 'nbt'
-version = '2.1.0'
+version = '3.0.0'
 ext.packaging = 'jar'
 ext.inceptionYear = '2011'
 ext.url = 'https://github.com/piegamesde/nbt/'
