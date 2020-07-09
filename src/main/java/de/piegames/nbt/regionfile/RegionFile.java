@@ -7,6 +7,7 @@ import java.nio.IntBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.BitSet;
@@ -46,13 +47,17 @@ public class RegionFile implements Closeable {
 	 * @author piegames
 	 */
 	public RegionFile(Path file) throws IOException {
+		this(file, StandardOpenOption.READ, StandardOpenOption.WRITE);
+	}
+
+	public RegionFile(Path file, OpenOption... options) throws IOException {
 		this.file = Objects.requireNonNull(file);
 
 		if (!Files.exists(file))
 			throw new NoSuchFileException(file.toString());
 		if (Files.size(file) < 4096 * 2)
 			throw new IllegalArgumentException("File size must be at least 4kiB, is this file corrupt?");
-		raf = FileChannel.open(file, StandardOpenOption.READ, StandardOpenOption.WRITE);
+		raf = FileChannel.open(file, options);
 
 		locations = ByteBuffer.allocate(4096);
 		raf.read(locations);
@@ -222,6 +227,15 @@ public class RegionFile implements Closeable {
 			Files.createDirectories(file.getParent());
 			return createNew(file);
 		}
+	}
+
+	/**
+	 * Open an existing region file without write permissions
+	 * 
+	 * @author piegames
+	 */
+	public static RegionFile openReadOnly(Path file) throws IOException {
+		return new RegionFile(file, StandardOpenOption.READ);
 	}
 
 	/**
