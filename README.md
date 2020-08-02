@@ -19,7 +19,7 @@ Go to [Jitpack.io](https://jitpack.io/#piegamesde/gson-fire) and follow the inst
 Dependency string in Gradle:
 ```groovy
 dependencies {
-	implementation 'com.github.piegamesde:nbt:3.0.0'
+	implementation 'com.github.piegamesde:nbt:3.0.1'
 }
 ```
 
@@ -28,7 +28,7 @@ Maven:
 <dependency>
 	<groupId>com.github.piegamesde</groupId>
 	<artifactId>nbt</artifactId>
-	<version>3.0.0</version>
+	<version>3.0.1</version>
 </dependency>
 ```
 
