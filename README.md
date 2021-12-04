@@ -67,7 +67,9 @@ A Minecraft save file can be loaded using class `RegionFile`. It allows reading 
 
 ```java
 try (RegionFile regionFile = new RegionFile(Paths.get(myWorld, "region", "r.0.0.mca"))) {
-	for (Chunk chunk : regionFile.listChunks()) {
+	List<Integer> list = regionFile.listChunks();
+	for (int i : list) {
+		Chunk chunk = regionFile.loadChunk(i);
 		CompoundTag data = chunk.readTag();
 	}
 }
